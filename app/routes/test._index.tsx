@@ -69,40 +69,40 @@ const publishToNftyTopic = async (topic: string, messageData: NtfyMessage) => {
   return response.json();
 };
 
-const triggerWebhook = async (webhook: string) => {
-  const response = await fetch(webhook, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message: "Hello, World!",
-    }),
-  });
+// const triggerWebhook = async (webhook: string) => {
+//   const response = await fetch(webhook, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       message: "Hello, World!",
+//     }),
+//   });
 
-  return response.json();
-};
+//   return response.json();
+// };
 
-subscribeToNftyTopic(ntfyTopic, async (event) => {
-  const data = JSON.parse((event as EventSourceMessage).data);
-  console.log(data);
+// subscribeToNftyTopic(ntfyTopic, async (event) => {
+//   const data = JSON.parse((event as EventSourceMessage).data);
+//   console.log(data);
 
-  let title = "";
-  let message = "";
+//   let title = "";
+//   let message = "";
 
-  try {
-    await triggerWebhook(webhook);
-    title = "Webhook triggered!";
-    message = "Successfully triggered the webhook!";
-  } catch (error) {
-    console.error(error);
-    title = "Webhook failed!";
-    message = "Failed to trigger the webhook!";
-  } finally {
-    console.log("Webhook triggered!");
-    publishToNftyTopic(ntfyTopic, { title, message });
-  }
-});
+//   try {
+//     await triggerWebhook(webhook);
+//     title = "Webhook triggered!";
+//     message = "Successfully triggered the webhook!";
+//   } catch (error) {
+//     console.error(error);
+//     title = "Webhook failed!";
+//     message = "Failed to trigger the webhook!";
+//   } finally {
+//     console.log("Webhook triggered!");
+//     publishToNftyTopic(ntfyTopic, { title, message });
+//   }
+// });
 
 const onPublishClick = async () => {
   publishToNftyTopic(ntfyTopic, {
