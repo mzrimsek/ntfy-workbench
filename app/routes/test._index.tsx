@@ -2,6 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { EventSourceMessage } from "@microsoft/fetch-event-source";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
+import { NtfyMessage } from "~/models";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,7 +18,18 @@ export default function Index() {
   const [eventList, setEventList] = useState<string[]>([]);
 
   const renderEventsList = () => {
-    return eventList.map((event, index) => <p key={index}>{event}</p>);
+    const ids = eventList.map((event) => (JSON.parse(event) as NtfyMessage).id);
+    const uniqueIds = [...new Set(ids)];
+    const uniqueMessageEvents = uniqueIds.map((id) =>
+      eventList.find((event) => {
+        const parsedEvent = JSON.parse(event) as NtfyMessage;
+        return parsedEvent.id === id && parsedEvent.type === "message";
+      })
+    );
+
+    return uniqueMessageEvents.map((event, index) => (
+      <p key={index}>{event}</p>
+    ));
   };
 
   useEffect(() => {
