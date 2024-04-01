@@ -4,24 +4,40 @@ import { DisplayState } from "~/enums";
 
 type DisplayStateSwitchProps = {
   displayState: DisplayState;
-  setDisplayState: (displayState: DisplayState) => void;
+  setDisplayState: React.Dispatch<React.SetStateAction<DisplayState>>;
 };
 
 const DisplayStateSwitch: React.FC<DisplayStateSwitchProps> = ({
   displayState,
   setDisplayState,
 }) => {
+  const handleToggle = () => {
+    setDisplayState((prevState) =>
+      prevState === DisplayState.Topic ? DisplayState.Tag : DisplayState.Topic
+    );
+  };
+
   return (
-    <div>
+    <div className="flex space-x-2">
       <button
-        onClick={() => setDisplayState(DisplayState.Topic)}
-        className={displayState === DisplayState.Topic ? "active" : ""}
+        type="button"
+        className={`px-4 py-2 rounded-md text-gray-700 font-medium ${
+          displayState === DisplayState.Topic
+            ? "bg-blue-500 text-white"
+            : "hover:bg-gray-200"
+        }`}
+        onClick={handleToggle}
       >
         Topic
       </button>
       <button
-        onClick={() => setDisplayState(DisplayState.Tag)}
-        className={displayState === DisplayState.Tag ? "active" : ""}
+        type="button"
+        className={`px-4 py-2 rounded-md text-gray-700 font-medium ${
+          displayState === DisplayState.Tag
+            ? "bg-blue-500 text-white"
+            : "hover:bg-gray-200"
+        }`}
+        onClick={handleToggle}
       >
         Tag
       </button>

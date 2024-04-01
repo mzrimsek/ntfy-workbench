@@ -98,11 +98,13 @@ export default function Index() {
 
   return (
     <div>
-      <h1>Ntfy Workbench</h1>
-      <DisplayStateSwitch
-        displayState={displayState}
-        setDisplayState={setDisplayState}
-      ></DisplayStateSwitch>
+      <header className="sticky top-0 z-50 flex items-center justify-between px-4 py-4 shadow-md">
+        <h1 className="text-xl font-bold">Ntfy Workbench</h1>
+        <DisplayStateSwitch
+          displayState={displayState}
+          setDisplayState={setDisplayState}
+        />
+      </header>
       <div>{renderTopics()}</div>
     </div>
   );
