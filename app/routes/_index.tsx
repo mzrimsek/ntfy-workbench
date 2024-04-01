@@ -9,6 +9,9 @@ import { promises as fs } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.component";
+import { DisplayState } from "~/enums";
+import { getTopicConfig } from "~/utils";
+import MessagesByTag from "~/containers/MessagesByTag.component";
 
 export const meta: MetaFunction = () => {
   return [
@@ -33,14 +36,11 @@ export default function Index() {
   const [topicMessageMap, setTopicMessageMap] = useState<
     Record<string, Array<NtfyMessage>>
   >({});
+  // const [displayState, setDisplayState] = useState<DisplayState>(
+  //   DisplayState.All
+  // );
 
   const loaderData = useLoaderData<typeof loader>();
-
-  const getMessagesForTopic = (topic?: string) =>
-    topic ? topicMessageMap[topic] ?? [] : [];
-
-  const getTopicConfig = (topic: string) =>
-    loaderData.topics.find((x) => x.name === topic);
 
   const updateEventMap = (message: NtfyMessage) => {
     console.log(message);
@@ -61,55 +61,12 @@ export default function Index() {
   };
 
   const renderTopics = () => {
-    const topics = Object.keys(topicMessageMap);
-    const sortedTopics = topics.sort((a, b) => a.localeCompare(b));
-    const topicConfigs = sortedTopics.map((topic) => getTopicConfig(topic));
-
-    const topicConfigsWithNoTags = topicConfigs.filter((x) => !x?.tags?.length);
-    const unTaggedMessageList = topicConfigsWithNoTags.map(
-      (topicConfig, index) => (
-        <TopicMessageList
-          key={index}
-          doTopicColoring
-          topicConfig={topicConfig}
-          messages={getMessagesForTopic(topicConfig?.name)}
-        ></TopicMessageList>
-      )
-    );
-
-    const tags = loaderData.tags;
-    const topicConfigsWithTags = topicConfigs.filter((x) => x?.tags?.length);
-    const topicMessagesList = topicConfigsWithTags.map((topicConfig) => {
-      const messages = getMessagesForTopic(topicConfig?.name);
-      return {
-        topicConfig,
-        messages,
-      } as TopicMessages;
-    });
-
-    const getTopicMessagesForTag = (tag: string) => {
-      return topicMessagesList.filter((x) =>
-        x.topicConfig?.tags?.includes(tag)
-      );
-    };
-    const taggedMessageLists = tags.map((tag, index) => {
-      const topicMessages = getTopicMessagesForTag(tag);
-      return (
-        <MergedTopicsMessageList
-          key={index}
-          tag={tag}
-          topicMessages={topicMessages}
-          doTopicColoring
-        ></MergedTopicsMessageList>
-      );
-    });
-
     return (
-      <div>
-        <h1>ungrouped</h1>
-        {unTaggedMessageList}
-        {taggedMessageLists}
-      </div>
+      <MessagesByTag
+        topicMessageMap={topicMessageMap}
+        topics={loaderData.topics}
+        tags={loaderData.tags}
+      ></MessagesByTag>
     );
   };
 
