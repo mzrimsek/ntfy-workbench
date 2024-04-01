@@ -15,6 +15,9 @@
       "name": "test2",
       "description": "test description",
       "tags": ["tag1", "tag2"]
+    },
+    {
+      "name": "test3"
     }
   ],
   ,
