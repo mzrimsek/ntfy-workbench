@@ -10,6 +10,7 @@ import { fileURLToPath } from "url";
 import { DisplayState } from "~/enums";
 import MessagesByTag from "~/containers/MessagesByTag.component";
 import DisplayStateSwitch from "~/components/DisplayStateSwitch.component";
+import AllMessages from "~/containers/AllMessages.component";
 
 export const meta: MetaFunction = () => {
   return [
@@ -59,13 +60,21 @@ export default function Index() {
   };
 
   const renderTopics = () => {
-    return (
-      <MessagesByTag
-        topicMessageMap={topicMessageMap}
-        topics={loaderData.topics}
-        tags={loaderData.tags}
-      ></MessagesByTag>
-    );
+    if (displayState === DisplayState.All) {
+      return <AllMessages topicMessageMap={topicMessageMap}></AllMessages>;
+    }
+
+    if (displayState === DisplayState.Tag) {
+      return (
+        <MessagesByTag
+          topicMessageMap={topicMessageMap}
+          topics={loaderData.topics}
+          tags={loaderData.tags}
+        ></MessagesByTag>
+      );
+    }
+
+    return null;
   };
 
   useEffect(() => {
