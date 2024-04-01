@@ -15,28 +15,51 @@ export const meta: MetaFunction = () => {
 const ntfyService = new NtfyService(nftyUrl, ntfyApiKey);
 
 export default function Index() {
-  const [eventList, setEventList] = useState<string[]>([]);
+  const [topicMessageMap, setTopicMessageMap] = useState<
+    Record<string, Array<NtfyMessage>>
+  >({});
+
+  const getMessagesForTopic = (topic: string) => topicMessageMap[topic] ?? [];
+
+  const updateEventMap = (message: NtfyMessage) => {
+    console.log(message);
+
+    const { topic, event } = message;
+
+    if (event !== "message") {
+      return;
+    }
+
+    setTopicMessageMap((prev) => {
+      const messages = prev[topic] ?? [];
+
+      const shouldAddMessage = !messages.some((x) => x.id === message.id);
+      const nextMessages = shouldAddMessage ? [...messages, message] : messages;
+      return { ...prev, [topic]: nextMessages };
+    });
+  };
 
   const renderEventsList = () => {
-    const ids = eventList.map((event) => (JSON.parse(event) as NtfyMessage).id);
-    const uniqueIds = [...new Set(ids)];
-    const uniqueMessageEvents = uniqueIds.map((id) =>
-      eventList.find((event) => {
-        const parsedEvent = JSON.parse(event) as NtfyMessage;
-        return parsedEvent.id === id && parsedEvent.event === "message";
-      })
-    );
+    const topics = Object.keys(topicMessageMap);
 
-    return uniqueMessageEvents.map((event, index) => (
-      <p key={index}>{event}</p>
+    return topics.map((topic, index) => (
+      <div key={index}>
+        <h2>{topic}</h2>
+        <ul>
+          {getMessagesForTopic(topic).map((event, index) => (
+            <li key={index}>
+              <pre>{JSON.stringify(event, null, 2)}</pre>
+            </li>
+          ))}
+        </ul>
+      </div>
     ));
   };
 
   useEffect(() => {
     ntfyService.subscribeToNftyTopic(ntfyTopics, async (event) => {
-      const data = JSON.parse((event as EventSourceMessage).data);
-      setEventList((prev) => [...prev, JSON.stringify(data)]);
-      console.log(data);
+      const data = JSON.parse(event.data) as NtfyMessage;
+      updateEventMap(data);
     });
   }, []);
 

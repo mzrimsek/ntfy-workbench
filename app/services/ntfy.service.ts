@@ -1,4 +1,7 @@
-import { fetchEventSource } from "@microsoft/fetch-event-source";
+import {
+  EventSourceMessage,
+  fetchEventSource,
+} from "@microsoft/fetch-event-source";
 import { NtfyMessage } from "~/models";
 
 export class NtfyService {
@@ -20,7 +23,7 @@ export class NtfyService {
 
   subscribeToNftyTopic = async (
     topics: string[],
-    eventHandler: (event: unknown) => unknown
+    eventHandler: (event: EventSourceMessage) => unknown
   ) => {
     const url = `${this.getNtfyUrl(topics)}/sse`;
     await fetchEventSource(url, {
