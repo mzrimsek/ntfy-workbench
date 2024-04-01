@@ -26,6 +26,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
       messages = topicMessageMap[selectedTopic];
     }
 
+    messages = messages || [];
     return messages.sort((a, b) => a.time - b.time);
   };
 
