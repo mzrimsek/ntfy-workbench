@@ -13,22 +13,25 @@ const TopicMessageList: React.FC<TopicMessageListProps> = ({
   messages,
   doTopicColoring,
 }) => {
+  const renderMessages = () => {
+    return messages.map((message, index) => (
+      <li key={index}>
+        <TopicMessage message={message} doTopicColoring={doTopicColoring} />
+      </li>
+    ));
+  };
+
   return (
     <div>
-      {topicConfig && <h2>{topicConfig.name}</h2>}
-      {topicConfig && topicConfig.description && (
-        <p>{topicConfig.description}</p>
+      {topicConfig && (
+        <div className="mb-4">
+          <h2 className="text-xl font-bold">{topicConfig.name}</h2>
+          {topicConfig.description && (
+            <h3 className="text-gray-500">{topicConfig.description}</h3>
+          )}
+        </div>
       )}
-      <ul>
-        {messages.map((message, index) => (
-          <li key={index}>
-            <TopicMessage
-              message={message}
-              doTopicColoring={doTopicColoring}
-            ></TopicMessage>
-          </li>
-        ))}
-      </ul>
+      <ul>{renderMessages()}</ul>
     </div>
   );
 };

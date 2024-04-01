@@ -18,24 +18,24 @@ const MergedTopicsMessageList: React.FC<MergedTopicsMessageListProps> = ({
     .flat()
     .sort((a, b) => a.time - b.time);
 
-  const topics = topicMessages
-    .map((x) => `${x.topicConfig?.name} - ${x.topicConfig?.description}`)
-    .join(", ");
+  const topics = topicMessages.map((x) => x.topicConfig?.name).join(", ");
+
+  const renderMessages = () => {
+    return mergedMessages.map((message, index) => (
+      <li key={index}>
+        <TopicMessage message={message} doTopicColoring={doTopicColoring} />
+      </li>
+    ));
+  };
 
   return (
-    <div>
-      <h1>{tag}</h1>
-      <h2>{topics}</h2>
-      <ul>
-        {mergedMessages.map((message, index) => (
-          <li key={index}>
-            <TopicMessage
-              message={message}
-              doTopicColoring={doTopicColoring}
-            ></TopicMessage>
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col space-y-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{tag}</h1>{" "}
+        <h2 className="text-lg text-gray-500">{topics}</h2>{" "}
+      </div>
+      <hr className="border-gray-200" />
+      <ul className="-ml-4 pl-4">{renderMessages()}</ul>
     </div>
   );
 };
