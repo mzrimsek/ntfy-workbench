@@ -1,1 +1,2 @@
-export * from "./ntfy.model";
+export * from "./ntfy.models";
+export * from "./env.models";

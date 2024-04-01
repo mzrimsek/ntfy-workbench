@@ -1,3 +1,33 @@
+# NTFY Workbench
+
+## Example .env
+
+```shell
+# .env
+NTFY_URL=https://ntfy.sh
+NTFY_API_KEY=your-api-key
+```
+
+## Example config.json
+
+```json
+{
+  "tags": ["tag1", "tag2"],
+  "topics": [
+    {
+      "name": "test",
+      "description": "test description",
+      "tags": ["tag1"]
+    },
+    {
+      "name": "test2",
+      "description": "test description",
+      "tags": ["tag1", "tag2"]
+    }
+  ]
+}
+```
+
 # Welcome to Remix + Vite!
 
 📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
