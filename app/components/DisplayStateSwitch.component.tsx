@@ -14,12 +14,6 @@ const DisplayStateSwitch: React.FC<DisplayStateSwitchProps> = ({
   return (
     <div>
       <button
-        onClick={() => setDisplayState(DisplayState.All)}
-        className={displayState === DisplayState.All ? "active" : ""}
-      >
-        All
-      </button>
-      <button
         onClick={() => setDisplayState(DisplayState.Topic)}
         className={displayState === DisplayState.Topic ? "active" : ""}
       >

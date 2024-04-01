@@ -1,7 +1,7 @@
 import { json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
-import { Config, NtfyMessage } from "~/models";
+import { ALL_MESSAGES, Config, NtfyMessage } from "~/models";
 import { useLoaderData } from "@remix-run/react";
 import { promises as fs } from "fs";
 import path from "path";
@@ -9,7 +9,6 @@ import { fileURLToPath } from "url";
 import { DisplayState } from "~/enums";
 import MessagesByTag from "~/containers/MessagesByTag.component";
 import DisplayStateSwitch from "~/components/DisplayStateSwitch.component";
-import AllMessages from "~/containers/AllMessages.component";
 import MessagesByTopic from "~/containers/MessagesByTopic.component";
 
 export const meta: MetaFunction = () => {
@@ -38,8 +37,9 @@ export default function Index() {
     Record<string, Array<NtfyMessage>>
   >({});
   const [displayState, setDisplayState] = useState<DisplayState>(
-    DisplayState.All
+    DisplayState.Topic
   );
+  const [selectedTopic, setSelectedTopic] = useState<string>(ALL_MESSAGES);
 
   const updateEventMap = (message: NtfyMessage) => {
     console.log(message);
@@ -60,15 +60,13 @@ export default function Index() {
   };
 
   const renderTopics = () => {
-    if (displayState === DisplayState.All) {
-      return <AllMessages topicMessageMap={topicMessageMap}></AllMessages>;
-    }
-
     if (displayState === DisplayState.Topic) {
       return (
         <MessagesByTopic
           topicMessageMap={topicMessageMap}
           topics={loaderData.topics}
+          selectedTopic={selectedTopic}
+          setSelectedTopic={setSelectedTopic}
         ></MessagesByTopic>
       );
     }
