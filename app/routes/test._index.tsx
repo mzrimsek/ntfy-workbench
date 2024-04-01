@@ -23,7 +23,7 @@ export default function Index() {
     const uniqueMessageEvents = uniqueIds.map((id) =>
       eventList.find((event) => {
         const parsedEvent = JSON.parse(event) as NtfyMessage;
-        return parsedEvent.id === id && parsedEvent.type === "message";
+        return parsedEvent.id === id && parsedEvent.event === "message";
       })
     );
 
@@ -38,7 +38,7 @@ export default function Index() {
       setEventList((prev) => [...prev, JSON.stringify(data)]);
       console.log(data);
     });
-  });
+  }, []);
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>

@@ -1,6 +1,8 @@
 export interface NtfyMessage {
+  event: string;
+  expires: number;
   id: string;
-  type: string;
-  title: string;
   message: string;
+  time: number;
+  topic: string;
 }
