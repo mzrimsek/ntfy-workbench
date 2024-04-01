@@ -1,17 +1,15 @@
 import { json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
-import { Config, NtfyMessage, TopicMessages } from "~/models";
-import TopicMessageList from "~/components/TopicMessageList.component";
+import { Config, NtfyMessage } from "~/models";
 import { useLoaderData } from "@remix-run/react";
 
 import { promises as fs } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.component";
 import { DisplayState } from "~/enums";
-import { getTopicConfig } from "~/utils";
 import MessagesByTag from "~/containers/MessagesByTag.component";
+import DisplayStateSwitch from "~/components/DisplayStateSwitch.component";
 
 export const meta: MetaFunction = () => {
   return [
@@ -33,14 +31,14 @@ export async function loader() {
 }
 
 export default function Index() {
+  const loaderData = useLoaderData<typeof loader>();
+
   const [topicMessageMap, setTopicMessageMap] = useState<
     Record<string, Array<NtfyMessage>>
   >({});
-  // const [displayState, setDisplayState] = useState<DisplayState>(
-  //   DisplayState.All
-  // );
-
-  const loaderData = useLoaderData<typeof loader>();
+  const [displayState, setDisplayState] = useState<DisplayState>(
+    DisplayState.All
+  );
 
   const updateEventMap = (message: NtfyMessage) => {
     console.log(message);
@@ -85,7 +83,11 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Ntfy Workbench</h1>
-      <div id="events">{renderTopics()}</div>
+      <DisplayStateSwitch
+        displayState={displayState}
+        setDisplayState={setDisplayState}
+      ></DisplayStateSwitch>
+      <div>{renderTopics()}</div>
     </div>
   );
 }
