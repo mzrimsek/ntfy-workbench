@@ -5,11 +5,13 @@ import TopicMessage from "./TopicMessage.component";
 interface TopicMessageListProps {
   topicConfig?: Topic;
   messages: NtfyMessage[];
+  doTopicColoring?: boolean;
 }
 
 const TopicMessageList: React.FC<TopicMessageListProps> = ({
   topicConfig,
   messages,
+  doTopicColoring,
 }) => {
   return (
     <div>
@@ -20,7 +22,10 @@ const TopicMessageList: React.FC<TopicMessageListProps> = ({
       <ul>
         {messages.map((message, index) => (
           <li key={index}>
-            <TopicMessage message={message}></TopicMessage>
+            <TopicMessage
+              message={message}
+              doTopicColoring={doTopicColoring}
+            ></TopicMessage>
           </li>
         ))}
       </ul>
