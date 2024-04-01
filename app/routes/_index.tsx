@@ -85,20 +85,7 @@ export default function Index() {
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>ntfy.sh: EventSource Example</h1>
-      <p>
-        This is an example showing how to use{" "}
-        <a href="https://ntfy.sh">ntfy.sh</a> with&nbsp;
-        <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource">
-          EventSource
-        </a>
-        .<br />
-        This example doesn&apos;t need a server. You can just save the HTML page
-        and run it from anywhere.
-      </p>
-      <p>
-        <b>Log:</b>
-      </p>
+      <h1>Ntfy Workbench</h1>
       <div id="events">{renderEventsList()}</div>
     </div>
   );
