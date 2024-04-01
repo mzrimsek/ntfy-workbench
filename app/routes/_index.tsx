@@ -2,6 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
 import { NtfyMessage } from "~/models";
+import TopicMessageList from "~/components/TopicMessageList.component";
 
 export const meta: MetaFunction = () => {
   return [
@@ -40,18 +41,14 @@ export default function Index() {
 
   const renderEventsList = () => {
     const topics = Object.keys(topicMessageMap);
+    const sortedTopics = topics.sort((a, b) => a.localeCompare(b));
 
-    return topics.map((topic, index) => (
-      <div key={index}>
-        <h2>{topic}</h2>
-        <ul>
-          {getMessagesForTopic(topic).map((event, index) => (
-            <li key={index}>
-              <pre>{JSON.stringify(event, null, 2)}</pre>
-            </li>
-          ))}
-        </ul>
-      </div>
+    return sortedTopics.map((topic, index) => (
+      <TopicMessageList
+        key={index}
+        topic={topic}
+        messages={getMessagesForTopic(topic)}
+      ></TopicMessageList>
     ));
   };
 
