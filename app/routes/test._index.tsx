@@ -33,7 +33,7 @@ export default function Index() {
   };
 
   useEffect(() => {
-    ntfyService.subscribeToNftyTopic(ntfyTopic, async (event) => {
+    ntfyService.subscribeToNftyTopic(ntfyTopics, async (event) => {
       const data = JSON.parse((event as EventSourceMessage).data);
       setEventList((prev) => [...prev, JSON.stringify(data)]);
       console.log(data);
@@ -45,7 +45,7 @@ export default function Index() {
       <h1>ntfy.sh: EventSource Example</h1>
       <p>
         This is an example showing how to use{" "}
-        <a href="https://ntfy.sh">ntfy.sh</a> with
+        <a href="https://ntfy.sh">ntfy.sh</a> with&nbsp;
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource">
           EventSource
         </a>
