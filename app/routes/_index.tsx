@@ -58,7 +58,7 @@ export default function Index() {
     });
   };
 
-  const renderEventsList = () => {
+  const renderTopics = () => {
     const topics = Object.keys(topicMessageMap);
     const sortedTopics = topics.sort((a, b) => a.localeCompare(b));
 
@@ -86,7 +86,7 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Ntfy Workbench</h1>
-      <div id="events">{renderEventsList()}</div>
+      <div id="events">{renderTopics()}</div>
     </div>
   );
 }
