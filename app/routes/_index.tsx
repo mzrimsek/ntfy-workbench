@@ -99,7 +99,7 @@ export default function Index() {
   }, [loaderData]);
 
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
+    <div>
       <h1>Ntfy Workbench</h1>
       <DisplayStateSwitch
         displayState={displayState}
