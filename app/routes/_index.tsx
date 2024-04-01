@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
 import { Config, NtfyMessage } from "~/models";
 import { useLoaderData } from "@remix-run/react";
-
 import { promises as fs } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -11,6 +10,7 @@ import { DisplayState } from "~/enums";
 import MessagesByTag from "~/containers/MessagesByTag.component";
 import DisplayStateSwitch from "~/components/DisplayStateSwitch.component";
 import AllMessages from "~/containers/AllMessages.component";
+import MessagesByTopic from "~/containers/MessagesByTopic.component";
 
 export const meta: MetaFunction = () => {
   return [
@@ -62,6 +62,15 @@ export default function Index() {
   const renderTopics = () => {
     if (displayState === DisplayState.All) {
       return <AllMessages topicMessageMap={topicMessageMap}></AllMessages>;
+    }
+
+    if (displayState === DisplayState.Topic) {
+      return (
+        <MessagesByTopic
+          topicMessageMap={topicMessageMap}
+          topics={loaderData.topics}
+        ></MessagesByTopic>
+      );
     }
 
     if (displayState === DisplayState.Tag) {
