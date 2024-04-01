@@ -1,13 +1,14 @@
 import { json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
-import { Config, NtfyMessage } from "~/models";
+import { Config, NtfyMessage, TopicMessages } from "~/models";
 import TopicMessageList from "~/components/TopicMessageList.component";
 import { useLoaderData } from "@remix-run/react";
 
 import { promises as fs } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.component";
 
 export const meta: MetaFunction = () => {
   return [
@@ -35,7 +36,8 @@ export default function Index() {
 
   const loaderData = useLoaderData<typeof loader>();
 
-  const getMessagesForTopic = (topic: string) => topicMessageMap[topic] ?? [];
+  const getMessagesForTopic = (topic?: string) =>
+    topic ? topicMessageMap[topic] ?? [] : [];
 
   const getTopicConfig = (topic: string) =>
     loaderData.topics.find((x) => x.name === topic);
@@ -61,14 +63,54 @@ export default function Index() {
   const renderTopics = () => {
     const topics = Object.keys(topicMessageMap);
     const sortedTopics = topics.sort((a, b) => a.localeCompare(b));
+    const topicConfigs = sortedTopics.map((topic) => getTopicConfig(topic));
 
-    return sortedTopics.map((topic, index) => (
-      <TopicMessageList
-        key={index}
-        topicConfig={getTopicConfig(topic)}
-        messages={getMessagesForTopic(topic)}
-      ></TopicMessageList>
-    ));
+    const topicConfigsWithNoTags = topicConfigs.filter((x) => !x?.tags?.length);
+    const unTaggedMessageList = topicConfigsWithNoTags.map(
+      (topicConfig, index) => (
+        <TopicMessageList
+          key={index}
+          doTopicColoring
+          topicConfig={topicConfig}
+          messages={getMessagesForTopic(topicConfig?.name)}
+        ></TopicMessageList>
+      )
+    );
+
+    const tags = loaderData.tags;
+    const topicConfigsWithTags = topicConfigs.filter((x) => x?.tags?.length);
+    const topicMessagesList = topicConfigsWithTags.map((topicConfig) => {
+      const messages = getMessagesForTopic(topicConfig?.name);
+      return {
+        topicConfig,
+        messages,
+      } as TopicMessages;
+    });
+
+    const getTopicMessagesForTag = (tag: string) => {
+      return topicMessagesList.filter((x) =>
+        x.topicConfig?.tags?.includes(tag)
+      );
+    };
+    const taggedMessageLists = tags.map((tag, index) => {
+      const topicMessages = getTopicMessagesForTag(tag);
+      return (
+        <MergedTopicsMessageList
+          key={index}
+          tag={tag}
+          topicMessages={topicMessages}
+          doTopicColoring
+        ></MergedTopicsMessageList>
+      );
+    });
+
+    return (
+      <div>
+        <h1>ungrouped</h1>
+        {unTaggedMessageList}
+        {taggedMessageLists}
+      </div>
+    );
   };
 
   useEffect(() => {
