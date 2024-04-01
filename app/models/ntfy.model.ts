@@ -5,4 +5,5 @@ export interface NtfyMessage {
   message: string;
   time: number;
   topic: string;
+  title?: string;
 }

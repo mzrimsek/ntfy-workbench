@@ -36,7 +36,7 @@ export class NtfyService {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.ntfyApiKey}`,
-        Title: title,
+        Title: title ?? "",
       },
     });
 
