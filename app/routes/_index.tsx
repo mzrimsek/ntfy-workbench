@@ -37,6 +37,9 @@ export default function Index() {
 
   const getMessagesForTopic = (topic: string) => topicMessageMap[topic] ?? [];
 
+  const getTopicConfig = (topic: string) =>
+    loaderData.topics.find((x) => x.name === topic);
+
   const updateEventMap = (message: NtfyMessage) => {
     console.log(message);
 
@@ -62,7 +65,7 @@ export default function Index() {
     return sortedTopics.map((topic, index) => (
       <TopicMessageList
         key={index}
-        topic={topic}
+        topicConfig={getTopicConfig(topic)}
         messages={getMessagesForTopic(topic)}
       ></TopicMessageList>
     ));
