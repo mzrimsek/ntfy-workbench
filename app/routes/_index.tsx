@@ -1,8 +1,10 @@
-import type { MetaFunction } from "@remix-run/node";
+import { json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
 import { NtfyMessage } from "~/models";
 import TopicMessageList from "~/components/TopicMessageList.component";
+import { useLoaderData } from "@remix-run/react";
+import { parseEnv } from "~/utils";
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,6 +13,14 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export async function loader() {
+  return json({
+    ENV: {
+      NTFY_URL: process.env.NTFY_URL,
+      NTFY_API_KEY: process.env.NTFY_API_KEY,
+    },
+  });
+}
 
 const ntfyService = new NtfyService(nftyUrl, ntfyApiKey);
 
@@ -18,6 +28,8 @@ export default function Index() {
   const [topicMessageMap, setTopicMessageMap] = useState<
     Record<string, Array<NtfyMessage>>
   >({});
+
+  const loaderData = useLoaderData<typeof loader>();
 
   const getMessagesForTopic = (topic: string) => topicMessageMap[topic] ?? [];
 
@@ -53,11 +65,15 @@ export default function Index() {
   };
 
   useEffect(() => {
+    const ntfyUrl = parseEnv("NTFY_URL", loaderData.ENV.NTFY_URL);
+    const ntfyApiKey = parseEnv("NTFY_API_KEY", loaderData.ENV.NTFY_API_KEY);
+    const ntfyService = new NtfyService(ntfyUrl, ntfyApiKey);
+
     ntfyService.subscribeToNftyTopic(ntfyTopics, async (event) => {
       const data = JSON.parse(event.data) as NtfyMessage;
       updateEventMap(data);
     });
-  }, []);
+  }, [loaderData.ENV.NTFY_URL, loaderData.ENV.NTFY_API_KEY]);
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
