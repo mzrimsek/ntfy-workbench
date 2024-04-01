@@ -40,20 +40,25 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
 
   const messages = getMessagesForSelectedTopic();
   const doTopicColoring = selectedTopic === ALL_MESSAGES;
+
   return (
-    <div>
-      <div>
+    <div className="flex">
+      <div className="w-64 border-r border-gray-200">
         <TopicMenu
           topics={getTopicNames()}
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}
-        ></TopicMenu>
+        />
       </div>
-      <h1>{getTitle()}</h1>
-      <TopicMessageList
-        messages={messages}
-        doTopicColoring={doTopicColoring}
-      ></TopicMessageList>
+      <div className="flex-grow px-4 py-4">
+        <h1 className="text-xl font-bold mb-4 border-b border-gray-200 pb-2">
+          {getTitle()}
+        </h1>
+        <TopicMessageList
+          messages={messages}
+          doTopicColoring={doTopicColoring}
+        />
+      </div>
     </div>
   );
 };
