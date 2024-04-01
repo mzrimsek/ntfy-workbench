@@ -1,5 +1,6 @@
 import React from "react";
 import { NtfyMessage, Topic } from "~/models";
+import TopicMessage from "./TopicMessage.component";
 
 interface TopicMessageListProps {
   topicConfig?: Topic;
@@ -18,7 +19,9 @@ const TopicMessageList: React.FC<TopicMessageListProps> = ({
       )}
       <ul>
         {messages.map((message, index) => (
-          <li key={index}>{JSON.stringify(message)}</li>
+          <li key={index}>
+            <TopicMessage message={message}></TopicMessage>
+          </li>
         ))}
       </ul>
     </div>
