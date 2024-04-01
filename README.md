@@ -1,13 +1,5 @@
 # NTFY Workbench
 
-## Example .env
-
-```shell
-# .env
-NTFY_URL=https://ntfy.sh
-NTFY_API_KEY=your-api-key
-```
-
 ## Example config.json
 
 ```json
@@ -24,7 +16,12 @@ NTFY_API_KEY=your-api-key
       "description": "test description",
       "tags": ["tag1", "tag2"]
     }
-  ]
+  ],
+  ,
+  "ntfy": {
+    "url": "https://ntfy.sh",
+    "apiKey": "your-api-key"
+  }
 }
 ```
 

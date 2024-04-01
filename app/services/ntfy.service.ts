@@ -14,11 +14,11 @@ export class NtfyService {
 
     if (topics.length === 1) {
       const topic = topics[0];
-      return `https://${this.nftyUrl}/${topic}`;
+      return `${this.nftyUrl}/${topic}`;
     }
 
     const topicsString = topics.join(",");
-    return `https://${this.nftyUrl}/${topicsString}`;
+    return `${this.nftyUrl}/${topicsString}`;
   };
 
   subscribeToNftyTopic = async (

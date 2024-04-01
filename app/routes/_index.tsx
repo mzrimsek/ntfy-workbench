@@ -1,10 +1,13 @@
 import { json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
-import { NtfyMessage } from "~/models";
+import { Config, NtfyMessage } from "~/models";
 import TopicMessageList from "~/components/TopicMessageList.component";
 import { useLoaderData } from "@remix-run/react";
-import { parseEnv } from "~/utils";
+
+import { promises as fs } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,15 +17,16 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader() {
-  return json({
-    ENV: {
-      NTFY_URL: process.env.NTFY_URL,
-      NTFY_API_KEY: process.env.NTFY_API_KEY,
-    },
-  });
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const jsonDirectory = `${__dirname}/../../json`;
+  const fileContents = await fs.readFile(
+    `${jsonDirectory}/config.json`,
+    "utf-8"
+  );
+  const config = JSON.parse(fileContents) as Config;
+  return json(config);
 }
-
-const ntfyService = new NtfyService(nftyUrl, ntfyApiKey);
 
 export default function Index() {
   const [topicMessageMap, setTopicMessageMap] = useState<
@@ -65,15 +69,16 @@ export default function Index() {
   };
 
   useEffect(() => {
-    const ntfyUrl = parseEnv("NTFY_URL", loaderData.ENV.NTFY_URL);
-    const ntfyApiKey = parseEnv("NTFY_API_KEY", loaderData.ENV.NTFY_API_KEY);
+    const ntfyUrl = loaderData.ntfy.url;
+    const ntfyApiKey = loaderData.ntfy.apiKey;
     const ntfyService = new NtfyService(ntfyUrl, ntfyApiKey);
 
+    const ntfyTopics = loaderData.topics.map((x) => x.name);
     ntfyService.subscribeToNftyTopic(ntfyTopics, async (event) => {
       const data = JSON.parse(event.data) as NtfyMessage;
       updateEventMap(data);
     });
-  }, [loaderData.ENV.NTFY_URL, loaderData.ENV.NTFY_API_KEY]);
+  }, [loaderData]);
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
