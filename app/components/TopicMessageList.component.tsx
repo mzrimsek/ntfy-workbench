@@ -12,7 +12,10 @@ const TopicMessageList: React.FC<TopicMessageListProps> = ({
   doTopicColoring,
 }) => {
   const renderMessages = () => {
-    return messages.map((message, index) => (
+    const sortedMessages = messages.sort((a, b) => {
+      return new Date(b.time).getTime() - new Date(a.time).getTime();
+    });
+    return sortedMessages.map((message, index) => (
       <li key={index} className="list-none my-2">
         <TopicMessage message={message} doTopicColoring={doTopicColoring} />
       </li>
