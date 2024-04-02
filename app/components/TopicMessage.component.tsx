@@ -39,7 +39,7 @@ const TopicMessage: React.FC<TopicMessageProps> = ({
         {message.title ? (
           <b className="text-lg mr-2">{message.title}</b>
         ) : (
-          <span />
+          <span /> // Empty span to maintain spacing
         )}
         <span className="text-sm">{formattedTime}</span>
       </div>
