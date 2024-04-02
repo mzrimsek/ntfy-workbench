@@ -25,12 +25,24 @@ const TopicMessage: React.FC<TopicMessageProps> = ({
 }) => {
   const topicColor = doTopicColoring ? pickTopicColor(message.topic) : "";
   const textColor = doTopicColoring ? getTextColor(topicColor) : "";
+  const formattedTime = new Date(message.time).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
     <div
       className={`rounded-lg px-4 py-2 shadow-sm`}
       style={{ color: textColor, backgroundColor: topicColor }}
     >
-      {message.title && <b className="mb-2">{message.title}</b>}
+      <div className="flex items-center justify-between">
+        {message.title ? (
+          <b className="text-lg mr-2">{message.title}</b>
+        ) : (
+          <span />
+        )}
+        <span className="text-sm">{formattedTime}</span>
+      </div>
       <p>{message.message}</p>
     </div>
   );
