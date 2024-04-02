@@ -25,9 +25,12 @@ const TopicMessage: React.FC<TopicMessageProps> = ({
 }) => {
   const topicColor = doTopicColoring ? pickTopicColor(message.topic) : "";
   const textColor = doTopicColoring ? getTextColor(topicColor) : "";
-  const formattedTime = new Date(message.time).toLocaleTimeString([], {
+  const formattedTime = new Date(message.time * 1000).toLocaleString([], {
     hour: "2-digit",
     minute: "2-digit",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
   });
 
   return (
