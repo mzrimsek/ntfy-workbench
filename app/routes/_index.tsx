@@ -40,6 +40,7 @@ export default function Index() {
     DisplayState.Topic
   );
   const [selectedTopic, setSelectedTopic] = useState<string>(ALL_MESSAGES);
+  const [selectedTagIndex, setSelectedTagIndex] = useState<number>(0);
 
   const updateEventMap = (message: NtfyMessage) => {
     console.log(message);
@@ -77,6 +78,8 @@ export default function Index() {
           topicMessageMap={topicMessageMap}
           topics={loaderData.topics}
           tags={loaderData.tags}
+          selectedTagIndex={selectedTagIndex}
+          setSelectedTagIndex={setSelectedTagIndex}
         ></MessagesByTag>
       );
     }

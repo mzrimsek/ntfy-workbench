@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from "react";
+import React from "react";
 import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.component";
 import {
   MessageByTagRender,
@@ -14,12 +14,16 @@ type MessagesByTagProps = {
   topicMessageMap: Record<string, Array<NtfyMessage>>;
   topics: Array<Topic>;
   tags: Array<string>;
+  selectedTagIndex: number;
+  setSelectedTagIndex: (index: number) => void;
 };
 
 const MessagesByTag: React.FC<MessagesByTagProps> = ({
   topicMessageMap,
   topics,
   tags,
+  selectedTagIndex,
+  setSelectedTagIndex,
 }) => {
   const topicNames = Object.keys(topicMessageMap);
   const sortedTopics = topicNames.sort((a, b) => a.localeCompare(b));
@@ -93,10 +97,8 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     }
   );
 
-  const [activeTabIndex, setActiveTabIndex] = useState(0); // Initial active tab
-
   const handleClick = (index: number) => {
-    setActiveTabIndex(index);
+    setSelectedTagIndex(index);
   };
 
   return (
@@ -107,7 +109,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
           <li
             key={index}
             className={`px-3 py-2 cursor-pointer hover:bg-gray-100 ${
-              activeTabIndex === index
+              selectedTagIndex === index
                 ? "border-b border-red-500 text-red-500"
                 : ""
             }`}
@@ -117,7 +119,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
           </li>
         ))}
       </ul>
-      <div>{allMessageLists[activeTabIndex].component}</div>
+      <div>{allMessageLists[selectedTagIndex].component}</div>
     </div>
   );
 };
