@@ -24,7 +24,7 @@ const TopicMessage: React.FC<TopicMessageProps> = ({
   doTopicColoring,
 }) => {
   const topicColor = doTopicColoring ? pickTopicColor(message.topic) : "";
-  const textColor = getTextColor(topicColor);
+  const textColor = doTopicColoring ? getTextColor(topicColor) : "";
   return (
     <div
       className={`rounded-lg px-4 py-2 shadow-sm`}
