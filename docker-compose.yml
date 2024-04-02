@@ -3,7 +3,7 @@ version: "3"
 services:
   ntfy-workbench:
     container_name: ntfy-workbench
-    image: docker pull ghcr.io/mzrimsek/ntfy-workbench:latest
+    image: ghcr.io/mzrimsek/ntfy-workbench:latest
     ports:
       - 3000:3000
     volumes:
