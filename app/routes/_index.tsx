@@ -108,6 +108,7 @@ export default function Index() {
           topics={loaderData.topics}
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}
+          acknowledgeTopic={acknowledgeAllMessagesForTopic}
         ></MessagesByTopic>
       );
     }

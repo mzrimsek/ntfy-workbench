@@ -9,6 +9,7 @@ type MessagesByTopicProps = {
   topics: Array<Topic>;
   selectedTopic: string;
   setSelectedTopic: (topic: string) => void;
+  acknowledgeTopic: (topic: string) => void;
 };
 
 const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
@@ -17,6 +18,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   topics,
   selectedTopic,
   setSelectedTopic,
+  acknowledgeTopic,
 }) => {
   const getMessagesForSelectedTopic = () => {
     let messages: Array<NtfyMessage> = Object.values(messageMap);
@@ -51,9 +53,15 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
         />
       </div>
       <div className="w-4/5 px-4 py-4 overflow-auto justify-self-end">
-        <h1 className="text-xl font-bold mb-4 border-b border-gray-200 pb-2">
-          {getTitle()}
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold mb-0 mr-4">{getTitle()}</h1>
+          <button
+            className="px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800"
+            onClick={() => acknowledgeTopic(selectedTopic)}
+          >
+            Acknowledge Topic
+          </button>
+        </div>
         <TopicMessageList
           messages={messages}
           doTopicColoring={doTopicColoring}
@@ -62,5 +70,5 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
     </div>
   );
 };
-
+// px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800
 export default MessagesByTopic;
