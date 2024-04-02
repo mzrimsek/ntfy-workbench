@@ -13,17 +13,13 @@ const TopicMessageList: React.FC<TopicMessageListProps> = ({
 }) => {
   const renderMessages = () => {
     return messages.map((message, index) => (
-      <li key={index}>
+      <li key={index} className="list-none my-2">
         <TopicMessage message={message} doTopicColoring={doTopicColoring} />
       </li>
     ));
   };
 
-  return (
-    <div>
-      <ul>{renderMessages()}</ul>
-    </div>
-  );
+  return <ul>{renderMessages()}</ul>;
 };
 
 export default TopicMessageList;
