@@ -39,7 +39,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   };
 
   const messages = getMessagesForSelectedTopic();
-  const doTopicColoring = selectedTopic === ALL_MESSAGES;
+  const doTopicColoring = true; // selectedTopic === ALL_MESSAGES;
 
   return (
     <div className="flex">
