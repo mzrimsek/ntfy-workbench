@@ -98,7 +98,7 @@ export default function Index() {
 
   return (
     <div>
-      <header className="sticky top-0 z-50 flex items-center justify-between px-4 py-4 shadow-md">
+      <header className="sticky top-0 z-50 flex items-center justify-between px-4 py-4 shadow-md dark:bg-slate-700">
         <h1 className="text-xl font-bold">Ntfy Workbench</h1>
         <DisplayStateSwitch
           displayState={displayState}

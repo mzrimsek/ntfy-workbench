@@ -21,10 +21,10 @@ const DisplayStateSwitch: React.FC<DisplayStateSwitchProps> = ({
     <div className="flex space-x-2">
       <button
         type="button"
-        className={`px-4 py-2 rounded-md text-gray-700 font-medium ${
+        className={`px-4 py-2 rounded-md font-medium ${
           displayState === DisplayState.Topic
             ? "bg-blue-500 text-white"
-            : "hover:bg-gray-200"
+            : "hover:bg-gray-200 hover:text-gray-800"
         }`}
         onClick={handleToggle}
       >
@@ -32,10 +32,10 @@ const DisplayStateSwitch: React.FC<DisplayStateSwitchProps> = ({
       </button>
       <button
         type="button"
-        className={`px-4 py-2 rounded-md text-gray-700 font-medium ${
+        className={`px-4 py-2 rounded-md font-medium ${
           displayState === DisplayState.Tag
             ? "bg-blue-500 text-white"
-            : "hover:bg-gray-200"
+            : "hover:bg-gray-200 hover:text-gray-800"
         }`}
         onClick={handleToggle}
       >
