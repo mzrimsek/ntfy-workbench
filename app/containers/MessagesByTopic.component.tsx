@@ -40,6 +40,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   };
 
   const messages = getMessagesForSelectedTopic();
+  const shouldRenderTopicAcknowledgementButton = selectedTopic !== ALL_MESSAGES;
   const doTopicColoring = true; // selectedTopic === ALL_MESSAGES;
 
   return (
@@ -55,12 +56,14 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
       <div className="w-4/5 px-4 py-4 overflow-auto justify-self-end">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold mb-0 mr-4">{getTitle()}</h1>
-          <button
-            className="px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800"
-            onClick={() => acknowledgeTopic(selectedTopic)}
-          >
-            Acknowledge Topic
-          </button>
+          {shouldRenderTopicAcknowledgementButton && (
+            <button
+              className="px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800"
+              onClick={() => acknowledgeTopic(selectedTopic)}
+            >
+              Acknowledge Topic
+            </button>
+          )}
         </div>
         <TopicMessageList
           messages={messages}

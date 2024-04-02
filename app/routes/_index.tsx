@@ -21,7 +21,7 @@ export const meta: MetaFunction = () => {
 export async function loader() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const jsonDirectory = `${__dirname}/../../json`;
+  const jsonDirectory = `${__dirname}/../../config`;
   const fileContents = await fs.readFile(
     `${jsonDirectory}/config.json`,
     "utf-8"
