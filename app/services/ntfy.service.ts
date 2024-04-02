@@ -25,7 +25,7 @@ export class NtfyService {
     topics: string[],
     eventHandler: (event: EventSourceMessage) => unknown
   ) => {
-    const url = `${this.getNtfyUrl(topics)}/sse`;
+    const url = `${this.getNtfyUrl(topics)}/sse?since=all`;
     await fetchEventSource(url, {
       headers: {
         Authorization: `Bearer ${this.ntfyApiKey}`,
