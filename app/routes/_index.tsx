@@ -64,13 +64,13 @@ export default function Index() {
     }
   };
 
-  const acknowledgeMessage = (id: string) => {
-    const metadata = messageMetadataMap[id];
-    const updatedMetadata = { ...metadata, acknowledged: true };
-    setMessageMetadataMap((prev) => {
-      return { ...prev, [id]: updatedMetadata };
-    });
-  };
+  // const acknowledgeMessage = (id: string) => {
+  //   const metadata = messageMetadataMap[id];
+  //   const updatedMetadata = { ...metadata, acknowledged: true };
+  //   setMessageMetadataMap((prev) => {
+  //     return { ...prev, [id]: updatedMetadata };
+  //   });
+  // };
 
   const acknowledgeAllMessages = () => {
     const messageIds = Object.keys(messageMetadataMap);
