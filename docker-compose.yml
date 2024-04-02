@@ -3,9 +3,11 @@ version: "3"
 services:
   ntfy-workbench:
     container_name: ntfy-workbench
-    build: .
+    image: docker pull ghcr.io/mzrimsek/ntfy-workbench:latest
     ports:
       - 3000:3000
     volumes:
       - ${CONFIG_DIR}:/app/config
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     restart: unless-stopped
