@@ -1,4 +1,5 @@
 import React from "react";
+import Markdown from "react-markdown";
 import { NtfyMessage } from "~/models";
 import { hashCode } from "~/utils";
 
@@ -46,7 +47,9 @@ const TopicMessage: React.FC<TopicMessageProps> = ({
         )}
         <span className="text-sm">{formattedTime}</span>
       </div>
-      <p>{message.message}</p>
+      <p>
+        <Markdown>{message.message}</Markdown>
+      </p>
     </div>
   );
 };
