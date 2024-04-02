@@ -7,7 +7,8 @@ type MessageCountIndicatorProps = {
 const MessageCountIndicator: React.FC<MessageCountIndicatorProps> = ({
   messageCounter,
 }) => {
-  const shouldRenderMessageCounter = messageCounter && messageCounter !== 0;
+  const shouldRenderMessageCounter =
+    messageCounter !== undefined && messageCounter > 0;
 
   return (
     <>
