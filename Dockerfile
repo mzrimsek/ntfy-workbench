@@ -29,4 +29,6 @@ USER remix
 EXPOSE 3000
 ENV PORT 3000
 
+VOLUME /app/config
+
 CMD ["npm", "run", "start"]

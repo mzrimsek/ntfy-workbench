@@ -1,6 +1,18 @@
 # NTFY Workbench
 
-## Example config.json
+## Running the app
+
+### Locally
+
+1. Install dependencies
+
+```shell
+npm install
+```
+
+2. Create a `config.json` file and drop it in the config folder. See the example below.
+
+#### Example config.json
 
 ```json
 {
@@ -28,39 +40,58 @@
 }
 ```
 
-# Welcome to Remix + Vite!
+3. Start the app
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
-
-## Development
-
-Run the Vite dev server:
-
-```shellscript
+```shell
 npm run dev
 ```
 
-## Deployment
+### Docker
 
-First, build your app for production:
+#### Build the Image
 
-```sh
-npm run build
+1. Pick a directory for your config location
+
+2. Create a `config.json` file and drop it in the desired directory. See the example below.
+
+#### Example config.json
+
+```json
+{
+  "tags": ["tag1", "tag2"],
+  "topics": [
+    {
+      "name": "test",
+      "description": "test description",
+      "tags": ["tag1"]
+    },
+    {
+      "name": "test2",
+      "description": "test description",
+      "tags": ["tag1", "tag2"]
+    },
+    {
+      "name": "test3"
+    }
+  ],
+  ,
+  "ntfy": {
+    "url": "https://ntfy.sh",
+    "apiKey": "your-api-key"
+  }
+}
 ```
 
-Then run the app in production mode:
+3. Build the image
 
-```sh
-npm start
+```shell
+docker build -t ntfy-workbench .
 ```
 
-Now you'll need to pick a host to deploy it to.
+4. Run the image
 
-### DIY
+```shell
+docker run -p 3000:3000 -v /path/to/config:/app/config ntfy-workbench
+```
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
+5. Access the app at `http://localhost:3000`

@@ -6,4 +6,6 @@ services:
     build: .
     ports:
       - 3000:3000
+    volumes:
+      - ${CONFIG_DIR}:/app/config
     restart: unless-stopped
