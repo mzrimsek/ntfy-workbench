@@ -1,5 +1,7 @@
 FROM node:18-alpine AS base
 
+LABEL org.opencontainers.image.source https://github.com/mzrimsek/ntfy-workbench
+
 FROM base AS deps
 
 RUN apk add --no-cache libc6-compat
