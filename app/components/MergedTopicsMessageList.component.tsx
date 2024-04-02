@@ -22,19 +22,19 @@ const MergedTopicsMessageList: React.FC<MergedTopicsMessageListProps> = ({
 
   const renderMessages = () => {
     return mergedMessages.map((message, index) => (
-      <li key={index}>
+      <li key={index} className="list-none">
         <TopicMessage message={message} doTopicColoring={doTopicColoring} />
       </li>
     ));
   };
 
   return (
-    <div>
-      <div>
-        <h1>{tag}</h1>
-        <h2>{topics}</h2>
+    <div className="rounded-lg shadow-md px-4 py-4">
+      <div className="flex items-center mb-4">
+        <h1 className="text-xl font-bold">{tag}</h1>
+        <h2 className="text-lg text-gray-400 ml-2">{topics}</h2>
       </div>
-      <ul>{renderMessages()}</ul>
+      <ul className="list-disc mt-4">{renderMessages()}</ul>
     </div>
   );
 };

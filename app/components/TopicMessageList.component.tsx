@@ -1,15 +1,13 @@
 import React from "react";
-import { NtfyMessage, Topic } from "~/models";
+import { NtfyMessage } from "~/models";
 import TopicMessage from "./TopicMessage.component";
 
 interface TopicMessageListProps {
-  topicConfig?: Topic;
   messages: NtfyMessage[];
   doTopicColoring?: boolean;
 }
 
 const TopicMessageList: React.FC<TopicMessageListProps> = ({
-  topicConfig,
   messages,
   doTopicColoring,
 }) => {
@@ -23,12 +21,6 @@ const TopicMessageList: React.FC<TopicMessageListProps> = ({
 
   return (
     <div>
-      {topicConfig && (
-        <div>
-          <h2>{topicConfig.name}</h2>
-          {topicConfig.description && <h3>{topicConfig.description}</h3>}
-        </div>
-      )}
       <ul>{renderMessages()}</ul>
     </div>
   );
