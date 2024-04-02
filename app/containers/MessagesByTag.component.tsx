@@ -1,6 +1,5 @@
 import React from "react";
 import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.component";
-import TopicMessageList from "~/components/TopicMessageList.component";
 import { NtfyMessage, Topic, TopicMessages } from "~/models";
 import { getMessagesForTopic, getTopicConfig } from "~/utils";
 
@@ -22,15 +21,25 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
   );
 
   const topicConfigsWithNoTags = topicConfigs.filter((x) => !x?.tags?.length);
-  const unTaggedMessageList = topicConfigsWithNoTags.map(
-    (topicConfig, index) => (
-      <TopicMessageList
-        key={index}
-        doTopicColoring
-        topicConfig={topicConfig}
-        messages={getMessagesForTopic(topicMessageMap, topicConfig?.name)}
-      ></TopicMessageList>
-    )
+  const untaggedTopicMessagesList = topicConfigsWithNoTags.map(
+    (topicConfig) => {
+      const messages = getMessagesForTopic(topicMessageMap, topicConfig?.name);
+      return {
+        topicConfig,
+        messages,
+      } as TopicMessages;
+    }
+  );
+
+  const untaggedMessages = untaggedTopicMessagesList.filter(
+    (x) => x.topicConfig?.tags === undefined || x.topicConfig?.tags.length === 0
+  );
+  const unTaggedMessageList = (
+    <MergedTopicsMessageList
+      tag="untagged"
+      topicMessages={untaggedMessages}
+      doTopicColoring
+    ></MergedTopicsMessageList>
   );
 
   const topicConfigsWithTags = topicConfigs.filter((x) => x?.tags?.length);
@@ -59,7 +68,6 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
 
   return (
     <div>
-      <h1>ungrouped</h1>
       {unTaggedMessageList}
       {taggedMessageLists}
     </div>

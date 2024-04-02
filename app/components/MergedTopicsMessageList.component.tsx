@@ -29,13 +29,12 @@ const MergedTopicsMessageList: React.FC<MergedTopicsMessageListProps> = ({
   };
 
   return (
-    <div className="flex flex-col space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{tag}</h1>{" "}
-        <h2 className="text-lg text-gray-500">{topics}</h2>{" "}
+    <div>
+      <div>
+        <h1>{tag}</h1>
+        <h2>{topics}</h2>
       </div>
-      <hr className="border-gray-200" />
-      <ul className="-ml-4 pl-4">{renderMessages()}</ul>
+      <ul>{renderMessages()}</ul>
     </div>
   );
 };
