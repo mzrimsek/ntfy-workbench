@@ -1,33 +1,32 @@
-FROM node:20.2.0-alpine3.18 as base
+FROM node:18-alpine AS base
 
-FROM base as deps
+FROM base AS deps
+
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+COPY package.json package-lock.json ./
+
+RUN npm ci
+
+FROM base AS builder
 
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
-
-FROM deps AS builder
-
-WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
 
-FROM deps AS prod-deps
+RUN npm run build && npm cache clean --force
 
-WORKDIR /app
-RUN npm install --production
-
-FROM base as runner
+FROM base AS runner
 
 WORKDIR /app
-RUN addgroup --system --gid 1001 remix
+
+COPY --from=builder /app .
+
+RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 remix
 USER remix
-COPY --from=prod-deps --chown=remix:remix /app/package*.json ./
-COPY --from=prod-deps --chown=remix:remix /app/node_modules ./node_modules
-COPY --from=builder --chown=remix:remix /app/build ./build
-COPY --from=builder --chown=remix:remix /app/public ./public
 
 EXPOSE 3000
+ENV PORT 3000
 
-ENTRYPOINT [ "node", "node_modules/.bin/remix-serve", "build/index.js"]
+CMD ["npm", "run", "start"]
