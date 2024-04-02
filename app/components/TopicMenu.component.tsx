@@ -1,22 +1,25 @@
 import React from "react";
 import TopicMenuButton from "./TopicMenuButton.component";
-import { ALL_MESSAGES } from "~/models";
+import { ALL_MESSAGES, MessageMetadata } from "~/models";
 
 type TopicMenuProps = {
-  messageCountMap: Record<string, number>;
+  messageMetadataMap: Record<string, MessageMetadata>;
   topics: Array<string>;
   selectedTopic: string;
   setSelectedTopic: (topic: string) => void;
 };
 
 const TopicMenu: React.FC<TopicMenuProps> = ({
-  messageCountMap,
+  messageMetadataMap,
   topics,
   selectedTopic,
   setSelectedTopic,
 }) => {
   const getMessageCountForTopic = (topic: string) => {
-    return messageCountMap[topic];
+    const messageMetadata = Object.values(messageMetadataMap);
+    const messagesForTopic = messageMetadata.filter((x) => x.topic === topic);
+    const acknowledgedMessages = messagesForTopic.filter((x) => x.acknowledged);
+    return acknowledgedMessages.length;
   };
 
   return (

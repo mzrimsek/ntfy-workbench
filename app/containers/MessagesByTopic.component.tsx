@@ -1,31 +1,28 @@
 import React from "react";
 import TopicMenu from "~/components/TopicMenu.component";
 import TopicMessageList from "~/components/TopicMessageList.component";
-import { ALL_MESSAGES, NtfyMessage, Topic } from "~/models";
+import { ALL_MESSAGES, MessageMetadata, NtfyMessage, Topic } from "~/models";
 
 type MessagesByTopicProps = {
-  topicMessageMap: Record<string, Array<NtfyMessage>>;
-  messageCountMap: Record<string, number>;
+  messageMap: Record<string, NtfyMessage>;
+  messageMetadataMap: Record<string, MessageMetadata>;
   topics: Array<Topic>;
   selectedTopic: string;
   setSelectedTopic: (topic: string) => void;
 };
 
 const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
-  topicMessageMap,
-  messageCountMap,
+  messageMap,
+  messageMetadataMap,
   topics,
   selectedTopic,
   setSelectedTopic,
 }) => {
   const getMessagesForSelectedTopic = () => {
-    let messages: Array<NtfyMessage> = [];
+    let messages: Array<NtfyMessage> = Object.values(messageMap);
 
-    if (selectedTopic === ALL_MESSAGES) {
-      const topics = Object.keys(topicMessageMap);
-      messages = topics.flatMap((topic) => topicMessageMap[topic]);
-    } else {
-      messages = topicMessageMap[selectedTopic];
+    if (selectedTopic !== ALL_MESSAGES) {
+      messages = messages.filter((message) => message.topic === selectedTopic);
     }
 
     messages = messages || [];
@@ -47,7 +44,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
     <div className="grid">
       <div className="w-1/5 border-r border-gray-200 fixed h-screen overflow-auto">
         <TopicMenu
-          messageCountMap={messageCountMap}
+          messageMetadataMap={messageMetadataMap}
           topics={getTopicNames()}
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}

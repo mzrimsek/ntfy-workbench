@@ -4,6 +4,7 @@ import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.compon
 import MessageCountIndicator from "~/components/MessageCountIndicator.component";
 import {
   MessageByTagRender,
+  MessageMetadata,
   MessagesByTagListProps,
   NtfyMessage,
   Topic,
@@ -12,8 +13,8 @@ import {
 import { getMessagesForTopic, getTopicConfig } from "~/utils";
 
 type MessagesByTagProps = {
-  topicMessageMap: Record<string, Array<NtfyMessage>>;
-  messageCountMap: Record<string, number>;
+  messageMap: Record<string, NtfyMessage>;
+  messageMetadataMap: Record<string, MessageMetadata>;
   topics: Array<Topic>;
   tags: Array<string>;
   selectedTagIndex: number;
@@ -21,22 +22,18 @@ type MessagesByTagProps = {
 };
 
 const MessagesByTag: React.FC<MessagesByTagProps> = ({
-  topicMessageMap,
-  messageCountMap,
+  messageMap,
+  messageMetadataMap,
   topics,
   tags,
   selectedTagIndex,
   setSelectedTagIndex,
 }) => {
-  const getTopicMessagesForTag = (tag: string) => {
-    return topicMessagesList.filter((x) => x.topicConfig?.tags?.includes(tag));
-  };
-
   const getTopicsNamesForMessages = (messages: Array<TopicMessages>) => {
     return messages.map((x) => x.topicConfig?.name) as Array<string>;
   };
 
-  const topicNames = Object.keys(topicMessageMap);
+  const topicNames = topics.map((topic) => topic.name);
   const sortedTopics = topicNames.sort((a, b) => a.localeCompare(b));
   const topicConfigs = sortedTopics.map((topic) =>
     getTopicConfig(topic, topics)
@@ -45,7 +42,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
   const topicConfigsWithNoTags = topicConfigs.filter((x) => !x?.tags?.length);
   const untaggedTopicMessagesList = topicConfigsWithNoTags.map(
     (topicConfig) => {
-      const messages = getMessagesForTopic(topicMessageMap, topicConfig?.name);
+      const messages = getMessagesForTopic(messageMap, topicConfig?.name);
       return {
         topicConfig,
         messages,
@@ -65,12 +62,16 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
 
   const topicConfigsWithTags = topicConfigs.filter((x) => x?.tags?.length);
   const topicMessagesList = topicConfigsWithTags.map((topicConfig) => {
-    const messages = getMessagesForTopic(topicMessageMap, topicConfig?.name);
+    const messages = getMessagesForTopic(messageMap, topicConfig?.name);
     return {
       topicConfig,
       messages,
     } as TopicMessages;
   });
+
+  const getTopicMessagesForTag = (tag: string) => {
+    return topicMessagesList.filter((x) => x.topicConfig?.tags?.includes(tag));
+  };
 
   const taggedMessageByTagProps: Array<MessagesByTagListProps> = tags.map(
     (tag) => {
@@ -113,10 +114,14 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
   };
 
   const getMessageCountForTagProp = (tag: MessagesByTagListProps) => {
-    // get count from messageCountMap for each topic and sum them up
-    return tag.topics.reduce((acc, topic) => {
-      return acc + messageCountMap[topic];
-    }, 0);
+    const messageMetadata = Object.values(messageMetadataMap);
+    const messagesForTopics = messageMetadata.filter((x) =>
+      tag.topics.includes(x.topic)
+    );
+    const acknowledgedMessages = messagesForTopics.filter(
+      (x) => x.acknowledged
+    );
+    return acknowledgedMessages.length;
   };
 
   return (

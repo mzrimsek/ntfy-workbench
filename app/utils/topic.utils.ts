@@ -4,6 +4,7 @@ export const getTopicConfig = (topic: string, topics: Array<Topic>) =>
   topics.find((x) => x.name === topic);
 
 export const getMessagesForTopic = (
-  topicMessageMap: Record<string, Array<NtfyMessage>>,
+  messageMap: Record<string, NtfyMessage>,
   topic?: string
-) => (topic ? topicMessageMap[topic] ?? [] : []);
+) =>
+  topic ? Object.values(messageMap).filter((x) => x.topic === topic) ?? [] : [];

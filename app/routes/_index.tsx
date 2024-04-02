@@ -1,7 +1,7 @@
 import { json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
-import { ALL_MESSAGES, Config, NtfyMessage } from "~/models";
+import { ALL_MESSAGES, Config, MessageMetadata, NtfyMessage } from "~/models";
 import { useLoaderData } from "@remix-run/react";
 import { promises as fs } from "fs";
 import path from "path";
@@ -33,11 +33,9 @@ export async function loader() {
 export default function Index() {
   const loaderData = useLoaderData<typeof loader>();
 
-  const [topicMessageMap, setTopicMessageMap] = useState<
-    Record<string, Array<NtfyMessage>>
-  >({});
-  const [messageCountMap, setMessageCountMap] = useState<
-    Record<string, number>
+  const [messageMap, setMessageMap] = useState<Record<string, NtfyMessage>>({});
+  const [messageMetadataMap, setMessageMetadataMap] = useState<
+    Record<string, MessageMetadata>
   >({});
   const [displayState, setDisplayState] = useState<DisplayState>(
     DisplayState.Topic
@@ -45,47 +43,33 @@ export default function Index() {
   const [selectedTopic, setSelectedTopic] = useState<string>(ALL_MESSAGES);
   const [selectedTagIndex, setSelectedTagIndex] = useState<number>(0);
 
-  const setTopicMessageCount = (topic: string, count: number) => {
-    setMessageCountMap((prev) => {
-      return { ...prev, [topic]: count };
-    });
-  };
-
-  const resetTopicMessageCount = (topic: string) => {
-    setMessageCountMap((prev) => {
-      return { ...prev, [topic]: 0 };
-    });
-  };
-
-  const resetAllTopicMessageCounts = () => {
-    setMessageCountMap({});
-  };
-
-  const updateTopicMessageMap = (message: NtfyMessage) => {
+  const processMessage = (message: NtfyMessage) => {
     console.log(message);
 
-    const { topic, event } = message;
+    const { id, topic, event } = message;
 
     if (event !== "message") {
       return;
     }
 
-    setTopicMessageMap((prev) => {
-      const messages = prev[topic] ?? [];
-      const shouldAddMessage = !messages.some((x) => x.id === message.id);
-      const nextMessages = shouldAddMessage ? [...messages, message] : messages;
-      setTopicMessageCount(topic, nextMessages.length);
-
-      return { ...prev, [topic]: nextMessages };
+    setMessageMap((prev) => {
+      return { ...prev, [id]: message };
     });
+
+    const metadata = messageMetadataMap[id];
+    if (!metadata) {
+      setMessageMetadataMap((prev) => {
+        return { ...prev, [id]: { id, topic, acknowledged: false } };
+      });
+    }
   };
 
   const renderTopics = () => {
     if (displayState === DisplayState.Topic) {
       return (
         <MessagesByTopic
-          topicMessageMap={topicMessageMap}
-          messageCountMap={messageCountMap}
+          messageMap={messageMap}
+          messageMetadataMap={messageMetadataMap}
           topics={loaderData.topics}
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}
@@ -96,8 +80,8 @@ export default function Index() {
     if (displayState === DisplayState.Tag) {
       return (
         <MessagesByTag
-          topicMessageMap={topicMessageMap}
-          messageCountMap={messageCountMap}
+          messageMap={messageMap}
+          messageMetadataMap={messageMetadataMap}
           topics={loaderData.topics}
           tags={loaderData.tags}
           selectedTagIndex={selectedTagIndex}
@@ -117,7 +101,7 @@ export default function Index() {
     const ntfyTopics = loaderData.topics.map((x) => x.name);
     ntfyService.subscribeToNftyTopics(ntfyTopics, async (event) => {
       const data = JSON.parse(event.data) as NtfyMessage;
-      updateTopicMessageMap(data);
+      processMessage(data);
     });
   }, [loaderData]);
 
