@@ -13,8 +13,8 @@ import MessagesByTopic from "~/containers/MessagesByTopic.component";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "ntfy.sh: EventSource Example" },
-    { name: "description", content: "ntfy.sh: EventSource Example" },
+    { title: "Ntfy Workbench" },
+    { name: "description", content: "Ntfy Workbench" },
   ];
 };
 
