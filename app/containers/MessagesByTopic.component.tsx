@@ -5,6 +5,7 @@ import { ALL_MESSAGES, NtfyMessage, Topic } from "~/models";
 
 type MessagesByTopicProps = {
   topicMessageMap: Record<string, Array<NtfyMessage>>;
+  messageCountMap: Record<string, number>;
   topics: Array<Topic>;
   selectedTopic: string;
   setSelectedTopic: (topic: string) => void;
@@ -12,6 +13,7 @@ type MessagesByTopicProps = {
 
 const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   topicMessageMap,
+  messageCountMap,
   topics,
   selectedTopic,
   setSelectedTopic,
@@ -45,6 +47,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
     <div className="grid">
       <div className="w-1/5 border-r border-gray-200 fixed h-screen overflow-auto">
         <TopicMenu
+          messageCountMap={messageCountMap}
           topics={getTopicNames()}
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}

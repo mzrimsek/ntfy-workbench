@@ -3,16 +3,22 @@ import TopicMenuButton from "./TopicMenuButton.component";
 import { ALL_MESSAGES } from "~/models";
 
 type TopicMenuProps = {
+  messageCountMap: Record<string, number>;
   topics: Array<string>;
   selectedTopic: string;
   setSelectedTopic: (topic: string) => void;
 };
 
 const TopicMenu: React.FC<TopicMenuProps> = ({
+  messageCountMap,
   topics,
   selectedTopic,
   setSelectedTopic,
 }) => {
+  const getMessageCountForTopic = (topic: string) => {
+    return messageCountMap[topic];
+  };
+
   return (
     <div className="flex flex-col space-y-2">
       <TopicMenuButton
@@ -27,6 +33,7 @@ const TopicMenu: React.FC<TopicMenuProps> = ({
           topic={topic}
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}
+          messageCounter={getMessageCountForTopic(topic)}
         ></TopicMenuButton>
       ))}
     </div>

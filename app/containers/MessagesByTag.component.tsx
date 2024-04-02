@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from "react";
 import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.component";
+import MessageCountIndicator from "~/components/MessageCountIndicator.component";
 import {
   MessageByTagRender,
   MessagesByTagListProps,
@@ -12,6 +13,7 @@ import { getMessagesForTopic, getTopicConfig } from "~/utils";
 
 type MessagesByTagProps = {
   topicMessageMap: Record<string, Array<NtfyMessage>>;
+  messageCountMap: Record<string, number>;
   topics: Array<Topic>;
   tags: Array<string>;
   selectedTagIndex: number;
@@ -20,11 +22,20 @@ type MessagesByTagProps = {
 
 const MessagesByTag: React.FC<MessagesByTagProps> = ({
   topicMessageMap,
+  messageCountMap,
   topics,
   tags,
   selectedTagIndex,
   setSelectedTagIndex,
 }) => {
+  const getTopicMessagesForTag = (tag: string) => {
+    return topicMessagesList.filter((x) => x.topicConfig?.tags?.includes(tag));
+  };
+
+  const getTopicsNamesForMessages = (messages: Array<TopicMessages>) => {
+    return messages.map((x) => x.topicConfig?.name) as Array<string>;
+  };
+
   const topicNames = Object.keys(topicMessageMap);
   const sortedTopics = topicNames.sort((a, b) => a.localeCompare(b));
   const topicConfigs = sortedTopics.map((topic) =>
@@ -49,6 +60,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
   const untaggedMessageByTagProps: MessagesByTagListProps = {
     tag: "untagged",
     messages: untaggedMessages,
+    topics: getTopicsNamesForMessages(untaggedMessages),
   };
 
   const topicConfigsWithTags = topicConfigs.filter((x) => x?.tags?.length);
@@ -60,15 +72,14 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     } as TopicMessages;
   });
 
-  const getTopicMessagesForTag = (tag: string) => {
-    return topicMessagesList.filter((x) => x.topicConfig?.tags?.includes(tag));
-  };
-
   const taggedMessageByTagProps: Array<MessagesByTagListProps> = tags.map(
     (tag) => {
+      const messages = getTopicMessagesForTag(tag);
+      const topics = getTopicsNamesForMessages(messages);
       return {
         tag,
-        messages: getTopicMessagesForTag(tag),
+        messages,
+        topics,
       };
     }
   );
@@ -101,10 +112,17 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     setSelectedTagIndex(index);
   };
 
+  const getMessageCountForTagProp = (tag: MessagesByTagListProps) => {
+    // get count from messageCountMap for each topic and sum them up
+    return tag.topics.reduce((acc, topic) => {
+      return acc + messageCountMap[topic];
+    }, 0);
+  };
+
   return (
     <div className="flex flex-col">
       <ul className="flex mb-4 border-b border-gray-200">
-        {allMessageLists.map((_, index) => (
+        {allMessageLists.map((renderProps, index) => (
           // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
           <li
             key={index}
@@ -116,6 +134,9 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
             onClick={() => handleClick(index)}
           >
             {allMessageLists[index].tag}
+            <MessageCountIndicator
+              messageCounter={getMessageCountForTagProp(renderProps)}
+            ></MessageCountIndicator>
           </li>
         ))}
       </ul>

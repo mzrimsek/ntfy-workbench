@@ -36,13 +36,32 @@ export default function Index() {
   const [topicMessageMap, setTopicMessageMap] = useState<
     Record<string, Array<NtfyMessage>>
   >({});
+  const [messageCountMap, setMessageCountMap] = useState<
+    Record<string, number>
+  >({});
   const [displayState, setDisplayState] = useState<DisplayState>(
     DisplayState.Topic
   );
   const [selectedTopic, setSelectedTopic] = useState<string>(ALL_MESSAGES);
   const [selectedTagIndex, setSelectedTagIndex] = useState<number>(0);
 
-  const updateEventMap = (message: NtfyMessage) => {
+  const setTopicMessageCount = (topic: string, count: number) => {
+    setMessageCountMap((prev) => {
+      return { ...prev, [topic]: count };
+    });
+  };
+
+  const resetTopicMessageCount = (topic: string) => {
+    setMessageCountMap((prev) => {
+      return { ...prev, [topic]: 0 };
+    });
+  };
+
+  const resetAllTopicMessageCounts = () => {
+    setMessageCountMap({});
+  };
+
+  const updateTopicMessageMap = (message: NtfyMessage) => {
     console.log(message);
 
     const { topic, event } = message;
@@ -55,6 +74,7 @@ export default function Index() {
       const messages = prev[topic] ?? [];
       const shouldAddMessage = !messages.some((x) => x.id === message.id);
       const nextMessages = shouldAddMessage ? [...messages, message] : messages;
+      setTopicMessageCount(topic, nextMessages.length);
 
       return { ...prev, [topic]: nextMessages };
     });
@@ -65,6 +85,7 @@ export default function Index() {
       return (
         <MessagesByTopic
           topicMessageMap={topicMessageMap}
+          messageCountMap={messageCountMap}
           topics={loaderData.topics}
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}
@@ -76,6 +97,7 @@ export default function Index() {
       return (
         <MessagesByTag
           topicMessageMap={topicMessageMap}
+          messageCountMap={messageCountMap}
           topics={loaderData.topics}
           tags={loaderData.tags}
           selectedTagIndex={selectedTagIndex}
@@ -95,7 +117,7 @@ export default function Index() {
     const ntfyTopics = loaderData.topics.map((x) => x.name);
     ntfyService.subscribeToNftyTopics(ntfyTopics, async (event) => {
       const data = JSON.parse(event.data) as NtfyMessage;
-      updateEventMap(data);
+      updateTopicMessageMap(data);
     });
   }, [loaderData]);
 
