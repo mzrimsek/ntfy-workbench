@@ -90,7 +90,7 @@ export default function Index() {
     const ntfyService = new NtfyService(ntfyUrl, ntfyApiKey);
 
     const ntfyTopics = loaderData.topics.map((x) => x.name);
-    ntfyService.subscribeToNftyTopic(ntfyTopics, async (event) => {
+    ntfyService.subscribeToNftyTopics(ntfyTopics, async (event) => {
       const data = JSON.parse(event.data) as NtfyMessage;
       updateEventMap(data);
     });

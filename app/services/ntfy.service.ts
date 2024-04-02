@@ -21,7 +21,7 @@ export class NtfyService {
     return `${this.nftyUrl}/${topicsString}`;
   };
 
-  subscribeToNftyTopic = async (
+  subscribeToNftyTopics = async (
     topics: string[],
     eventHandler: (event: EventSourceMessage) => unknown
   ) => {
