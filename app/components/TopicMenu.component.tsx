@@ -1,4 +1,6 @@
 import React from "react";
+import TopicMenuButton from "./TopicMenuButton.component";
+import { ALL_MESSAGES } from "~/models";
 
 type TopicMenuProps = {
   topics: Array<string>;
@@ -13,28 +15,19 @@ const TopicMenu: React.FC<TopicMenuProps> = ({
 }) => {
   return (
     <div className="flex flex-col space-y-2">
-      <button
-        className={`px-4 py-2 rounded-md text-left font-medium ${
-          selectedTopic === "ALL_MESSAGES"
-            ? "bg-blue-500 text-white"
-            : "hover:bg-gray-200 hover:text-gray-800"
-        }`}
-        onClick={() => setSelectedTopic("ALL_MESSAGES")}
-      >
-        All
-      </button>
+      <TopicMenuButton
+        topic={ALL_MESSAGES}
+        displayTopic="All"
+        selectedTopic={selectedTopic}
+        setSelectedTopic={setSelectedTopic}
+      ></TopicMenuButton>
       {topics.map((topic, index) => (
-        <button
+        <TopicMenuButton
           key={index}
-          className={`px-4 py-2 rounded-md text-left font-medium ${
-            selectedTopic === topic
-              ? "bg-blue-500 text-white"
-              : "hover:bg-gray-200 hover:text-gray-800"
-          }`}
-          onClick={() => setSelectedTopic(topic)}
-        >
-          {topic}
-        </button>
+          topic={topic}
+          selectedTopic={selectedTopic}
+          setSelectedTopic={setSelectedTopic}
+        ></TopicMenuButton>
       ))}
     </div>
   );
