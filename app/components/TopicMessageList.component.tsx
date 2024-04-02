@@ -19,7 +19,18 @@ const TopicMessageList: React.FC<TopicMessageListProps> = ({
     ));
   };
 
-  return <ul>{renderMessages()}</ul>;
+  const shouldRenderMessages = messages.length > 0;
+  return (
+    <ul>
+      {shouldRenderMessages ? (
+        renderMessages()
+      ) : (
+        <p className="text-gray-500 text-center mt-4 flex items-center justify-center">
+          No messages to display.
+        </p>
+      )}
+    </ul>
+  );
 };
 
 export default TopicMessageList;
