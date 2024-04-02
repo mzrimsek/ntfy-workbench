@@ -42,15 +42,15 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   const doTopicColoring = true; // selectedTopic === ALL_MESSAGES;
 
   return (
-    <div className="flex">
-      <div className="w-64 border-r border-gray-200">
+    <div className="grid">
+      <div className="w-1/5 border-r border-gray-200 fixed h-screen overflow-auto">
         <TopicMenu
           topics={getTopicNames()}
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}
         />
       </div>
-      <div className="flex-grow px-4 py-4">
+      <div className="w-4/5 px-4 py-4 overflow-auto justify-self-end">
         <h1 className="text-xl font-bold mb-4 border-b border-gray-200 pb-2">
           {getTitle()}
         </h1>
