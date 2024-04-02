@@ -18,8 +18,10 @@ const TopicMenu: React.FC<TopicMenuProps> = ({
   const getMessageCountForTopic = (topic: string) => {
     const messageMetadata = Object.values(messageMetadataMap);
     const messagesForTopic = messageMetadata.filter((x) => x.topic === topic);
-    const acknowledgedMessages = messagesForTopic.filter((x) => x.acknowledged);
-    return acknowledgedMessages.length;
+    const unacknowledgedMessages = messagesForTopic.filter(
+      (x) => !x.acknowledged
+    );
+    return unacknowledgedMessages.length;
   };
 
   return (

@@ -118,10 +118,10 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     const messagesForTopics = messageMetadata.filter((x) =>
       tag.topics.includes(x.topic)
     );
-    const acknowledgedMessages = messagesForTopics.filter(
-      (x) => x.acknowledged
+    const unacknowledgedMessages = messagesForTopics.filter(
+      (x) => !x.acknowledged
     );
-    return acknowledgedMessages.length;
+    return unacknowledgedMessages.length;
   };
 
   return (
