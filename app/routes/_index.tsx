@@ -64,6 +64,41 @@ export default function Index() {
     }
   };
 
+  const acknowledgeMessage = (id: string) => {
+    const metadata = messageMetadataMap[id];
+    const updatedMetadata = { ...metadata, acknowledged: true };
+    setMessageMetadataMap((prev) => {
+      return { ...prev, [id]: updatedMetadata };
+    });
+  };
+
+  const acknowledgeAllMessages = () => {
+    const messageIds = Object.keys(messageMetadataMap);
+
+    const updatedMessageMetadataMap = messageIds.reduce((acc, id) => {
+      const metadata = messageMetadataMap[id];
+      const updatedMetadata = { ...metadata, acknowledged: true };
+      return { ...acc, [id]: updatedMetadata };
+    }, {} as Record<string, MessageMetadata>);
+
+    setMessageMetadataMap(updatedMessageMetadataMap);
+  };
+
+  const acknowledgeAllMessagesForTopic = (topic: string) => {
+    const allMetadata = Object.values(messageMetadataMap);
+    const metadataForTopic = allMetadata.filter((x) => x.topic === topic);
+
+    const updatedMetadata = metadataForTopic.reduce((acc, messageMetadata) => {
+      const metadata = messageMetadataMap[messageMetadata.id];
+      const updatedMetadata = { ...metadata, acknowledged: true };
+      return { ...acc, [metadata.id]: updatedMetadata };
+    }, {} as Record<string, MessageMetadata>);
+
+    setMessageMetadataMap((prev) => {
+      return { ...prev, ...updatedMetadata };
+    });
+  };
+
   const renderTopics = () => {
     if (displayState === DisplayState.Topic) {
       return (
@@ -109,6 +144,12 @@ export default function Index() {
     <div>
       <header className="sticky top-0 z-50 flex items-center justify-between px-4 py-4 shadow-md dark:bg-slate-700 bg-white">
         <h1 className="text-xl font-bold">Ntfy Workbench</h1>
+        <button
+          className="px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800"
+          onClick={() => acknowledgeAllMessages()}
+        >
+          Acknowledge All
+        </button>
         <DisplayStateSwitch
           displayState={displayState}
           setDisplayState={setDisplayState}
