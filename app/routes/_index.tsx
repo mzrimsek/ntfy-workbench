@@ -41,7 +41,7 @@ export default function Index() {
     DisplayState.Topic
   );
   const [selectedTopic, setSelectedTopic] = useState<string>(ALL_MESSAGES);
-  const [selectedTagIndex, setSelectedTagIndex] = useState<number>(0);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const processMessage = (message: NtfyMessage) => {
     console.log(message);
@@ -120,8 +120,8 @@ export default function Index() {
           messageMetadataMap={messageMetadataMap}
           topics={loaderData.topics}
           tags={loaderData.tags}
-          selectedTagIndex={selectedTagIndex}
-          setSelectedTagIndex={setSelectedTagIndex}
+          selectedTagIndex={selectedTag}
+          setSelectedTagIndex={setSelectedTag}
         ></MessagesByTag>
       );
     }

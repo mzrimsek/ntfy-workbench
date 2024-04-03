@@ -3,7 +3,6 @@ import React from "react";
 import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.component";
 import MessageCountIndicator from "~/components/MessageCountIndicator.component";
 import {
-  MessageByTagRender,
   MessageMetadata,
   MessagesByTagListProps,
   NtfyMessage,
@@ -17,8 +16,8 @@ type MessagesByTagProps = {
   messageMetadataMap: Record<string, MessageMetadata>;
   topics: Array<Topic>;
   tags: Array<string>;
-  selectedTagIndex: number;
-  setSelectedTagIndex: (index: number) => void;
+  selectedTag: string;
+  setSelectedTag: (index: string) => void;
 };
 
 const MessagesByTag: React.FC<MessagesByTagProps> = ({
@@ -26,8 +25,8 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
   messageMetadataMap,
   topics,
   tags,
-  selectedTagIndex,
-  setSelectedTagIndex,
+  selectedTag,
+  setSelectedTag,
 }) => {
   const getTopicsNamesForMessages = (messages: Array<TopicMessages>) => {
     return messages.map((x) => x.topicConfig?.name) as Array<string>;
@@ -91,26 +90,8 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     ? [untaggedMessageByTagProps, ...taggedMessageByTagProps]
     : taggedMessageByTagProps;
 
-  const allMessageLists: Array<MessageByTagRender> = allByTagProps.map(
-    (data, index) => {
-      const component = (
-        <MergedTopicsMessageList
-          key={index}
-          tag={data.tag}
-          topicMessages={data.messages}
-          doTopicColoring
-        ></MergedTopicsMessageList>
-      );
-
-      return {
-        ...data,
-        component,
-      };
-    }
-  );
-
-  const handleClick = (index: number) => {
-    setSelectedTagIndex(index);
+  const handleClick = (tag: string) => {
+    setSelectedTag(tag);
   };
 
   const getMessageCountForTagProp = (tag: MessagesByTagListProps) => {
@@ -124,28 +105,40 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     return unacknowledgedMessages.length;
   };
 
-  return (
-    <div className="flex flex-col">
+  const renderMenu = (allByTagProps: Array<MessagesByTagListProps>) => {
+    return (
       <ul className="flex mb-4 border-b border-gray-200">
-        {allMessageLists.map((renderProps, index) => (
+        {allByTagProps.map((allByTagProp, index) => (
           // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
           <li
             key={index}
             className={`px-3 py-2 cursor-pointer hover:bg-gray-100 ${
-              selectedTagIndex === index
+              selectedTag === allByTagProp.tag
                 ? "border-b border-red-500 text-red-500"
                 : ""
             }`}
-            onClick={() => handleClick(index)}
+            onClick={() => handleClick(allByTagProp.tag)}
           >
-            {allMessageLists[index].tag}
+            {allByTagProp.tag}
             <MessageCountIndicator
-              messageCounter={getMessageCountForTagProp(renderProps)}
+              messageCounter={getMessageCountForTagProp(allByTagProp)}
             ></MessageCountIndicator>
           </li>
         ))}
       </ul>
-      <div>{allMessageLists[selectedTagIndex].component}</div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col">
+      {renderMenu(allByTagProps)}
+      <div>
+        <MergedTopicsMessageList
+          tag={selectedTag}
+          topicMessages={getTopicMessagesForTag(selectedTag)}
+          doTopicColoring
+        ></MergedTopicsMessageList>
+      </div>
     </div>
   );
 };
