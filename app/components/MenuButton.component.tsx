@@ -1,19 +1,19 @@
 import React from "react";
 import MessageCountIndicator from "./MessageCountIndicator.component";
 
-type TopicMenuButtonProps = {
-  topic: string;
-  displayTopic?: string;
-  selectedTopic: string;
-  setSelectedTopic: (topic: string) => void;
+type MenuButtonProps = {
+  value: string;
+  display?: string;
+  selectedOption: string;
+  setSelectedOption: (topic: string) => void;
   messageCounter?: number;
 };
 
-const TopicMenuButton: React.FC<TopicMenuButtonProps> = ({
-  topic,
-  displayTopic,
-  selectedTopic,
-  setSelectedTopic,
+const MenuButton: React.FC<MenuButtonProps> = ({
+  value: topic,
+  display: displayTopic,
+  selectedOption: selectedTopic,
+  setSelectedOption: setSelectedTopic,
   messageCounter,
 }) => {
   const getButtonText = () => {
@@ -37,4 +37,4 @@ const TopicMenuButton: React.FC<TopicMenuButtonProps> = ({
   );
 };
 
-export default TopicMenuButton;
+export default MenuButton;

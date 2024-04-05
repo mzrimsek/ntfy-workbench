@@ -1,5 +1,5 @@
 import React from "react";
-import TopicMenu from "~/components/TopicMenu.component";
+import Menu from "~/components/Menu.component";
 import TopicMessageList from "~/components/TopicMessageList.component";
 import { ALL_MESSAGES, MessageMetadata, NtfyMessage, Topic } from "~/models";
 
@@ -46,10 +46,10 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   return (
     <div className="grid">
       <div className="w-1/5 border-r border-gray-200 fixed h-screen overflow-auto">
-        <TopicMenu
+        <Menu
           messageMetadataMap={messageMetadataMap}
-          topics={getTopicNames()}
-          selectedTopic={selectedTopic}
+          options={getTopicNames()}
+          selectedOption={selectedTopic}
           setSelectedTopic={setSelectedTopic}
         />
       </div>
