@@ -1,7 +1,7 @@
 import { json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
-import { ALL_MESSAGES, Config, MessageMetadata, NtfyMessage } from "~/models";
+import { ALL_OPTIONS, Config, MessageMetadata, NtfyMessage } from "~/models";
 import { useLoaderData } from "@remix-run/react";
 import { promises as fs } from "fs";
 import path from "path";
@@ -40,7 +40,7 @@ export default function Index() {
   const [displayState, setDisplayState] = useState<DisplayState>(
     DisplayState.Topic
   );
-  const [selectedTopic, setSelectedTopic] = useState<string>(ALL_MESSAGES);
+  const [selectedTopic, setSelectedTopic] = useState<string>(ALL_OPTIONS);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const processMessage = (message: NtfyMessage) => {

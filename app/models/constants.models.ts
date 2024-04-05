@@ -1,1 +1,1 @@
-export const ALL_MESSAGES = "ALL_MESSAGES";
+export const ALL_OPTIONS = "ALL_OPTIONS";

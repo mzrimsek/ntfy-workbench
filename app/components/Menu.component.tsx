@@ -1,44 +1,39 @@
 import React from "react";
 import MenuButton from "./MenuButton.component";
-import { ALL_MESSAGES, MessageMetadata } from "~/models";
+import { ALL_OPTIONS } from "~/models";
 
 type MenuProps = {
-  messageMetadataMap: Record<string, MessageMetadata>;
   options: Array<string>;
   selectedOption: string;
-  setSelectedTopic: (topic: string) => void;
+  setSelectedOption: (option: string) => void;
+  getCountForOption?: (option: string) => number;
 };
 
 const Menu: React.FC<MenuProps> = ({
-  messageMetadataMap,
-  options: topics,
-  selectedOption: selectedTopic,
-  setSelectedTopic,
+  options,
+  selectedOption,
+  setSelectedOption,
+  getCountForOption,
 }) => {
-  const getMessageCountForSelection = (topic: string) => {
-    const messageMetadata = Object.values(messageMetadataMap);
-    const messagesForTopic = messageMetadata.filter((x) => x.topic === topic);
-    const unacknowledgedMessages = messagesForTopic.filter(
-      (x) => !x.acknowledged
-    );
-    return unacknowledgedMessages.length;
+  const getCount = (option: string) => {
+    return getCountForOption ? getCountForOption(option) : 0;
   };
 
   return (
     <div className="flex flex-col space-y-2">
       <MenuButton
-        value={ALL_MESSAGES}
+        value={ALL_OPTIONS}
         display="All"
-        selectedOption={selectedTopic}
-        setSelectedOption={setSelectedTopic}
+        selectedOption={selectedOption}
+        setSelectedOption={setSelectedOption}
       ></MenuButton>
-      {topics.map((topic, index) => (
+      {options.map((topic, index) => (
         <MenuButton
           key={index}
           value={topic}
-          selectedOption={selectedTopic}
-          setSelectedOption={setSelectedTopic}
-          messageCounter={getMessageCountForSelection(topic)}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          messageCounter={getCount(topic)}
         ></MenuButton>
       ))}
     </div>
