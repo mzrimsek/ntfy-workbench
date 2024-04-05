@@ -5,7 +5,3 @@ export interface MessagesByTagListProps {
   messages: Array<TopicMessages>;
   topics: Array<string>;
 }
-
-export interface MessageByTagRender extends MessagesByTagListProps {
-  component: JSX.Element;
-}
