@@ -38,8 +38,10 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
 
   const topicConfigsWithTags = topicConfigs.filter((x) => x?.tags?.length);
   const topicMessagesList = topicConfigsWithTags.map((topicConfig) => {
+    const messages = getMessagesForTopic(messageMap, topicConfig?.name);
     return {
       topicConfig,
+      messages,
     } as TopicMessages;
   });
 
@@ -48,12 +50,6 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
       return untaggedTopicMessagesList;
     }
     return topicMessagesList.filter((x) => x.topicConfig?.tags?.includes(tag));
-  };
-
-  const getMessageCountForTag = (tag: string) => {
-    const messages = getMessagesForTag(tag);
-    const messageCount = messages.flatMap((x) => x.messages).length;
-    return messageCount;
   };
 
   const tagNames = [UNTAGGED, ...tags];
@@ -65,7 +61,6 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
           options={tagNames}
           selectedOption={selectedTag}
           setSelectedOption={setSelectedTag}
-          getCountForOption={getMessageCountForTag}
           hideAllOption
         />
       </div>

@@ -33,13 +33,13 @@ const Menu: React.FC<MenuProps> = ({
           setSelectedOption={setSelectedOption}
         ></MenuButton>
       )}
-      {options.map((topic, index) => (
+      {options.map((option, index) => (
         <MenuButton
           key={index}
-          value={topic}
+          value={option}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
-          messageCounter={getCount(topic)}
+          messageCounter={getCount(option)}
         ></MenuButton>
       ))}
     </div>
