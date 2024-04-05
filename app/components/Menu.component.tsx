@@ -7,6 +7,7 @@ type MenuProps = {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
   getCountForOption?: (option: string) => number;
+  hideAllOption?: boolean;
 };
 
 const Menu: React.FC<MenuProps> = ({
@@ -14,19 +15,24 @@ const Menu: React.FC<MenuProps> = ({
   selectedOption,
   setSelectedOption,
   getCountForOption,
+  hideAllOption,
 }) => {
   const getCount = (option: string) => {
     return getCountForOption ? getCountForOption(option) : 0;
   };
 
+  const shouldRenderAllOption = !hideAllOption;
+
   return (
     <div className="flex flex-col space-y-2">
-      <MenuButton
-        value={ALL_OPTIONS}
-        display="All"
-        selectedOption={selectedOption}
-        setSelectedOption={setSelectedOption}
-      ></MenuButton>
+      {shouldRenderAllOption && (
+        <MenuButton
+          value={ALL_OPTIONS}
+          display="All"
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        ></MenuButton>
+      )}
       {options.map((topic, index) => (
         <MenuButton
           key={index}
