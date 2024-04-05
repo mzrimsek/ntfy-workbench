@@ -1,5 +1,7 @@
 # NTFY Workbench
 
+A simple web app to manage NTFY topics wtih tags.
+
 ## Running the app
 
 ### Locally
