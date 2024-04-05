@@ -1,7 +1,13 @@
 import { json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
-import { ALL_OPTIONS, Config, MessageMetadata, NtfyMessage } from "~/models";
+import {
+  ALL_OPTIONS,
+  Config,
+  MessageMetadata,
+  NtfyMessage,
+  UNTAGGED,
+} from "~/models";
 import { useLoaderData } from "@remix-run/react";
 import { promises as fs } from "fs";
 import path from "path";
@@ -41,7 +47,7 @@ export default function Index() {
     DisplayState.Topic
   );
   const [selectedTopic, setSelectedTopic] = useState<string>(ALL_OPTIONS);
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedTag, setSelectedTag] = useState<string>(UNTAGGED);
 
   const processMessage = (message: NtfyMessage) => {
     console.log(message);
@@ -117,11 +123,10 @@ export default function Index() {
       return (
         <MessagesByTag
           messageMap={messageMap}
-          messageMetadataMap={messageMetadataMap}
           topics={loaderData.topics}
           tags={loaderData.tags}
-          selectedTagIndex={selectedTag}
-          setSelectedTagIndex={setSelectedTag}
+          selectedTag={selectedTag}
+          setSelectedTag={setSelectedTag}
         ></MessagesByTag>
       );
     }
