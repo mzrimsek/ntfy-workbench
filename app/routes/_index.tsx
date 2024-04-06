@@ -49,27 +49,6 @@ export default function Index() {
   const [selectedTopic, setSelectedTopic] = useState<string>(ALL_OPTIONS);
   const [selectedTag, setSelectedTag] = useState<string>(UNTAGGED);
 
-  const processMessage = (message: NtfyMessage) => {
-    console.log(message);
-
-    const { id, topic, event } = message;
-
-    if (event !== "message") {
-      return;
-    }
-
-    setMessageMap((prev) => {
-      return { ...prev, [id]: message };
-    });
-
-    const metadata = messageMetadataMap[id];
-    if (!metadata) {
-      setMessageMetadataMap((prev) => {
-        return { ...prev, [id]: { id, topic, acknowledged: false } };
-      });
-    }
-  };
-
   // const acknowledgeMessage = (id: string) => {
   //   const metadata = messageMetadataMap[id];
   //   const updatedMetadata = { ...metadata, acknowledged: true };
@@ -139,12 +118,33 @@ export default function Index() {
     const ntfyApiKey = loaderData.ntfy.apiKey;
     const ntfyService = new NtfyService(ntfyUrl, ntfyApiKey);
 
+    const processMessage = (message: NtfyMessage) => {
+      console.log(message);
+
+      const { id, topic, event } = message;
+
+      if (event !== "message") {
+        return;
+      }
+
+      setMessageMap((prev) => {
+        return { ...prev, [id]: message };
+      });
+
+      const metadata = messageMetadataMap[id];
+      if (!metadata) {
+        setMessageMetadataMap((prev) => {
+          return { ...prev, [id]: { id, topic, acknowledged: false } };
+        });
+      }
+    };
+
     const ntfyTopics = loaderData.topics.map((x) => x.name);
     ntfyService.subscribeToNftyTopics(ntfyTopics, async (event) => {
       const data = JSON.parse(event.data) as NtfyMessage;
       processMessage(data);
     });
-  }, [loaderData]);
+  }, [loaderData, messageMetadataMap]);
 
   return (
     <div>
