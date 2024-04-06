@@ -1,9 +1,10 @@
-import { json, type MetaFunction } from "@remix-run/node";
+import { TypedResponse, json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
 import {
   ALL_OPTIONS,
-  Config,
+  ApplicationConfig,
+  JsonConfig,
   MessageMetadata,
   NtfyMessage,
   UNTAGGED,
@@ -24,7 +25,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader() {
+export async function loader(): Promise<TypedResponse<ApplicationConfig>> {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const jsonDirectory = `${__dirname}/../../config`;
@@ -32,11 +33,19 @@ export async function loader() {
     `${jsonDirectory}/config.json`,
     "utf-8"
   );
-  const config = JSON.parse(fileContents) as Config;
-  return json(config);
+  const jsonConfig = JSON.parse(fileContents) as JsonConfig;
+
+  const tags = jsonConfig.topics.reduce((acc, topic) => {
+    return [...acc, ...(topic.tags ?? [])];
+  }, [] as string[]);
+  const uniqueTags = Array.from(new Set(tags));
+
+  const appConfig: ApplicationConfig = { ...jsonConfig, tags: uniqueTags };
+
+  return json(appConfig);
 }
 
-export default function Index() {
+export default function Index(): JSX.Element {
   const loaderData = useLoaderData<typeof loader>();
 
   const [messageMap, setMessageMap] = useState<Record<string, NtfyMessage>>({});
@@ -84,7 +93,7 @@ export default function Index() {
   //   });
   // };
 
-  const renderTopics = () => {
+  const renderTopics: () => JSX.Element | null = () => {
     if (displayState === DisplayState.Topic) {
       return (
         <MessagesByTopic

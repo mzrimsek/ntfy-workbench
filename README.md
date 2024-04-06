@@ -18,7 +18,6 @@ npm install
 
 ```json
 {
-  "tags": ["tag1", "tag2"],
   "topics": [
     {
       "name": "test",
