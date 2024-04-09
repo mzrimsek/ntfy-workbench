@@ -8,6 +8,4 @@ services:
       - 3000:3000
     volumes:
       - ${CONFIG_DIR}:/app/config
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
     restart: unless-stopped
