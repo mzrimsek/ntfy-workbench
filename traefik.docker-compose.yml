@@ -1,0 +1,24 @@
+version: "3.3"
+
+networks:
+  public:
+    external:
+      name: ${TRAEFIK_PUBLIC_NETWORK}
+
+services:
+  ntfy-workbench:
+    container_name: ntfy-workbench
+    image: ghcr.io/mzrimsek/ntfy-workbench:latest
+    volumes:
+      - ${CONFIG_DIR}/ntfy-workbench/config:/app/config
+    networks:
+      - public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ntfy-workbench.rule=Host(`${APP_URL}`)"
+      - "traefik.http.routers.ntfy-workbench.entrypoints=websecure"
+      - "traefik.http.routers.ntfy-workbench.tls.certresolver=tlsresolver"
+      - "traefik.http.routers.ntfy-workbench.middlewares=authelia@docker"
+      - "traefik.http.services.ntfy-workbench.loadbalancer.server.port=3000"
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
