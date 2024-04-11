@@ -9,7 +9,7 @@ type MessagesByTopicProps = {
   topics: Array<Topic>;
   selectedTopic: string;
   setSelectedTopic: (topic: string) => void;
-  acknowledgeTopic: (topic: string) => void;
+  acknowledgeTopic?: (topic: string) => void;
 };
 
 const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
@@ -40,7 +40,8 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   };
 
   const messages = getMessagesForSelectedTopic();
-  const shouldRenderTopicAcknowledgementButton = selectedTopic !== ALL_OPTIONS;
+  const shouldRenderTopicAcknowledgementButton =
+    selectedTopic !== ALL_OPTIONS && acknowledgeTopic !== undefined;
   const doTopicColoring = true; // selectedTopic === ALL_MESSAGES;
 
   const getMessageCountForTopic = (topic: string) => {
@@ -54,7 +55,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
 
   return (
     <div className="grid">
-      <div className="w-1/5 border-r border-gray-200 fixed h-screen overflow-auto">
+      <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
         <Menu
           options={getTopicNames()}
           selectedOption={selectedTopic}

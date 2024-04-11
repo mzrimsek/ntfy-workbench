@@ -1,9 +1,10 @@
-import { json, type MetaFunction } from "@remix-run/node";
+import { TypedResponse, json, type MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { NtfyService } from "~/services";
 import {
   ALL_OPTIONS,
-  Config,
+  ApplicationConfig,
+  JsonConfig,
   MessageMetadata,
   NtfyMessage,
   UNTAGGED,
@@ -24,7 +25,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader() {
+export async function loader(): Promise<TypedResponse<ApplicationConfig>> {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const jsonDirectory = `${__dirname}/../../config`;
@@ -32,11 +33,19 @@ export async function loader() {
     `${jsonDirectory}/config.json`,
     "utf-8"
   );
-  const config = JSON.parse(fileContents) as Config;
-  return json(config);
+  const jsonConfig = JSON.parse(fileContents) as JsonConfig;
+
+  const tags = jsonConfig.topics.reduce((acc, topic) => {
+    return [...acc, ...(topic.tags ?? [])];
+  }, [] as string[]);
+  const uniqueTags = Array.from(new Set(tags));
+
+  const appConfig: ApplicationConfig = { ...jsonConfig, tags: uniqueTags };
+
+  return json(appConfig);
 }
 
-export default function Index() {
+export default function Index(): JSX.Element {
   const loaderData = useLoaderData<typeof loader>();
 
   const [messageMap, setMessageMap] = useState<Record<string, NtfyMessage>>({});
@@ -49,27 +58,6 @@ export default function Index() {
   const [selectedTopic, setSelectedTopic] = useState<string>(ALL_OPTIONS);
   const [selectedTag, setSelectedTag] = useState<string>(UNTAGGED);
 
-  const processMessage = (message: NtfyMessage) => {
-    console.log(message);
-
-    const { id, topic, event } = message;
-
-    if (event !== "message") {
-      return;
-    }
-
-    setMessageMap((prev) => {
-      return { ...prev, [id]: message };
-    });
-
-    const metadata = messageMetadataMap[id];
-    if (!metadata) {
-      setMessageMetadataMap((prev) => {
-        return { ...prev, [id]: { id, topic, acknowledged: false } };
-      });
-    }
-  };
-
   // const acknowledgeMessage = (id: string) => {
   //   const metadata = messageMetadataMap[id];
   //   const updatedMetadata = { ...metadata, acknowledged: true };
@@ -78,34 +66,34 @@ export default function Index() {
   //   });
   // };
 
-  const acknowledgeAllMessages = () => {
-    const messageIds = Object.keys(messageMetadataMap);
+  // const acknowledgeAllMessages = () => {
+  //   const messageIds = Object.keys(messageMetadataMap);
 
-    const updatedMessageMetadataMap = messageIds.reduce((acc, id) => {
-      const metadata = messageMetadataMap[id];
-      const updatedMetadata = { ...metadata, acknowledged: true };
-      return { ...acc, [id]: updatedMetadata };
-    }, {} as Record<string, MessageMetadata>);
+  //   const updatedMessageMetadataMap = messageIds.reduce((acc, id) => {
+  //     const metadata = messageMetadataMap[id];
+  //     const updatedMetadata = { ...metadata, acknowledged: true };
+  //     return { ...acc, [id]: updatedMetadata };
+  //   }, {} as Record<string, MessageMetadata>);
 
-    setMessageMetadataMap(updatedMessageMetadataMap);
-  };
+  //   setMessageMetadataMap(updatedMessageMetadataMap);
+  // };
 
-  const acknowledgeAllMessagesForTopic = (topic: string) => {
-    const allMetadata = Object.values(messageMetadataMap);
-    const metadataForTopic = allMetadata.filter((x) => x.topic === topic);
+  // const acknowledgeAllMessagesForTopic = (topic: string) => {
+  //   const allMetadata = Object.values(messageMetadataMap);
+  //   const metadataForTopic = allMetadata.filter((x) => x.topic === topic);
 
-    const updatedMetadata = metadataForTopic.reduce((acc, messageMetadata) => {
-      const metadata = messageMetadataMap[messageMetadata.id];
-      const updatedMetadata = { ...metadata, acknowledged: true };
-      return { ...acc, [metadata.id]: updatedMetadata };
-    }, {} as Record<string, MessageMetadata>);
+  //   const updatedMetadata = metadataForTopic.reduce((acc, messageMetadata) => {
+  //     const metadata = messageMetadataMap[messageMetadata.id];
+  //     const updatedMetadata = { ...metadata, acknowledged: true };
+  //     return { ...acc, [metadata.id]: updatedMetadata };
+  //   }, {} as Record<string, MessageMetadata>);
 
-    setMessageMetadataMap((prev) => {
-      return { ...prev, ...updatedMetadata };
-    });
-  };
+  //   setMessageMetadataMap((prev) => {
+  //     return { ...prev, ...updatedMetadata };
+  //   });
+  // };
 
-  const renderTopics = () => {
+  const renderTopics: () => JSX.Element | null = () => {
     if (displayState === DisplayState.Topic) {
       return (
         <MessagesByTopic
@@ -114,7 +102,7 @@ export default function Index() {
           topics={loaderData.topics}
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}
-          acknowledgeTopic={acknowledgeAllMessagesForTopic}
+          // acknowledgeTopic={acknowledgeAllMessagesForTopic}
         ></MessagesByTopic>
       );
     }
@@ -139,23 +127,44 @@ export default function Index() {
     const ntfyApiKey = loaderData.ntfy.apiKey;
     const ntfyService = new NtfyService(ntfyUrl, ntfyApiKey);
 
+    const processMessage = (message: NtfyMessage) => {
+      console.log(message);
+
+      const { id, topic, event } = message;
+
+      if (event !== "message") {
+        return;
+      }
+
+      setMessageMap((prev) => {
+        return { ...prev, [id]: message };
+      });
+
+      const metadata = messageMetadataMap[id];
+      if (!metadata) {
+        setMessageMetadataMap((prev) => {
+          return { ...prev, [id]: { id, topic, acknowledged: false } };
+        });
+      }
+    };
+
     const ntfyTopics = loaderData.topics.map((x) => x.name);
     ntfyService.subscribeToNftyTopics(ntfyTopics, async (event) => {
       const data = JSON.parse(event.data) as NtfyMessage;
       processMessage(data);
     });
-  }, [loaderData]);
+  }, [loaderData, messageMetadataMap]);
 
   return (
     <div>
       <header className="sticky top-0 z-50 flex items-center justify-between px-4 py-4 shadow-md dark:bg-slate-700 bg-white">
         <h1 className="text-xl font-bold">Ntfy Workbench</h1>
-        <button
+        {/* <button
           className="px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800"
           onClick={() => acknowledgeAllMessages()}
         >
           Acknowledge All
-        </button>
+        </button> */}
         <DisplayStateSwitch
           displayState={displayState}
           setDisplayState={setDisplayState}

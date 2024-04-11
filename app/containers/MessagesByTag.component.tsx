@@ -56,7 +56,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
 
   return (
     <div className="grid">
-      <div className="w-1/5 border-r border-gray-200 fixed h-screen overflow-auto">
+      <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
         <Menu
           options={tagNames}
           selectedOption={selectedTag}
