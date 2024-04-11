@@ -55,7 +55,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
 
   return (
     <div className="grid">
-      <div className="w-1/5 border-r border-gray-200 fixed overflow-y-scroll top-20 bottom-0">
+      <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
         <Menu
           options={getTopicNames()}
           selectedOption={selectedTopic}
