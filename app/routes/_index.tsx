@@ -7,6 +7,7 @@ import {
   JsonConfig,
   MessageMetadata,
   NtfyMessage,
+  SCREEN_SIZES,
   UNTAGGED,
 } from "~/models";
 import { useLoaderData } from "@remix-run/react";
@@ -17,6 +18,7 @@ import { DisplayState } from "~/enums";
 import MessagesByTag from "~/containers/MessagesByTag.component";
 import DisplayStateSwitch from "~/components/DisplayStateSwitch.component";
 import MessagesByTopic from "~/containers/MessagesByTopic.component";
+import HamburgerButton from "~/components/HamburgerButton.component";
 
 export const meta: MetaFunction = () => {
   return [
@@ -57,6 +59,7 @@ export default function Index(): JSX.Element {
   );
   const [selectedTopic, setSelectedTopic] = useState<string>(ALL_OPTIONS);
   const [selectedTag, setSelectedTag] = useState<string>(UNTAGGED);
+  const [showMenu, setShowMenu] = useState<boolean>(true);
 
   // const acknowledgeMessage = (id: string) => {
   //   const metadata = messageMetadataMap[id];
@@ -103,6 +106,7 @@ export default function Index(): JSX.Element {
           selectedTopic={selectedTopic}
           setSelectedTopic={setSelectedTopic}
           // acknowledgeTopic={acknowledgeAllMessagesForTopic}
+          showMenu={showMenu}
         ></MessagesByTopic>
       );
     }
@@ -115,6 +119,7 @@ export default function Index(): JSX.Element {
           tags={loaderData.tags}
           selectedTag={selectedTag}
           setSelectedTag={setSelectedTag}
+          showMenu={showMenu}
         ></MessagesByTag>
       );
     }
@@ -148,16 +153,31 @@ export default function Index(): JSX.Element {
       }
     };
 
-    const ntfyTopics = loaderData.topics.map((x) => x.name);
+    const ntfyTopics = loaderData.topics.map((topic) => topic.name);
     ntfyService.subscribeToNftyTopics(ntfyTopics, async (event) => {
       const data = JSON.parse(event.data) as NtfyMessage;
       processMessage(data);
     });
   }, [loaderData, messageMetadataMap]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const isLargeScreen = window.document.body.clientWidth > SCREEN_SIZES.md;
+      setShowMenu(isLargeScreen);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const toggleMenu = () => {
+    setShowMenu((prev) => !prev);
+  };
+
   return (
     <div>
       <header className="sticky top-0 z-50 flex items-center justify-between px-4 py-4 shadow-md dark:bg-slate-700 bg-white">
+        <HamburgerButton onClick={toggleMenu}></HamburgerButton>
         <h1 className="text-xl font-bold">Ntfy Workbench</h1>
         {/* <button
           className="px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800"

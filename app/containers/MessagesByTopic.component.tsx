@@ -10,6 +10,7 @@ type MessagesByTopicProps = {
   selectedTopic: string;
   setSelectedTopic: (topic: string) => void;
   acknowledgeTopic?: (topic: string) => void;
+  showMenu: boolean;
 };
 
 const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
@@ -19,6 +20,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   selectedTopic,
   setSelectedTopic,
   acknowledgeTopic,
+  showMenu,
 }) => {
   const getMessagesForSelectedTopic = () => {
     let messages: Array<NtfyMessage> = Object.values(messageMap);
@@ -57,14 +59,16 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
 
   return (
     <div className="grid">
-      <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
-        <Menu
-          options={getTopicNames()}
-          selectedOption={selectedTopic}
-          setSelectedOption={setSelectedTopic}
-          getCountForOption={getMessageCountForTopic}
-        />
-      </div>
+      {showMenu && (
+        <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
+          <Menu
+            options={getTopicNames()}
+            selectedOption={selectedTopic}
+            setSelectedOption={setSelectedTopic}
+            getCountForOption={getMessageCountForTopic}
+          />
+        </div>
+      )}
       <div className="w-4/5 px-4 py-4 overflow-auto justify-self-end">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold mb-0 mr-4">{getTitle()}</h1>

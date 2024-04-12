@@ -10,6 +10,7 @@ type MessagesByTagProps = {
   tags: Array<string>;
   selectedTag: string;
   setSelectedTag: (index: string) => void;
+  showMenu: boolean;
 };
 
 const MessagesByTag: React.FC<MessagesByTagProps> = ({
@@ -18,6 +19,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
   tags,
   selectedTag,
   setSelectedTag,
+  showMenu,
 }) => {
   const topicNames = topics.map((topic) => topic.name);
   const sortedTopics = topicNames.sort((a, b) => a.localeCompare(b));
@@ -60,16 +62,20 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
 
   const tagNames = [UNTAGGED, ...tags];
 
+  // if show menu
+
   return (
     <div className="grid">
-      <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
-        <Menu
-          options={tagNames}
-          selectedOption={selectedTag}
-          setSelectedOption={setSelectedTag}
-          hideAllOption
-        />
-      </div>
+      {showMenu && (
+        <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
+          <Menu
+            options={tagNames}
+            selectedOption={selectedTag}
+            setSelectedOption={setSelectedTag}
+            hideAllOption
+          />
+        </div>
+      )}
       <div className="w-4/5 px-4 py-4 overflow-auto justify-self-end">
         <MergedTopicsMessageList
           tag={selectedTag}
