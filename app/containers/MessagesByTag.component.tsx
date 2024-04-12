@@ -1,8 +1,8 @@
 import React from "react";
-import Menu from "~/components/Menu.component";
 import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.component";
 import { NtfyMessage, Topic, TopicMessages, UNTAGGED } from "~/models";
 import { getMessagesForTopic, getTopicConfig } from "~/utils";
+import MessagesDisplay from "./MessagesDisplay.component";
 
 type MessagesByTagProps = {
   messageMap: Record<string, NtfyMessage>;
@@ -60,28 +60,30 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     );
   };
 
+  const getMessageCountForTag = (tag: string) => {
+    return getMessagesForTag(tag).reduce(
+      (acc, messages) => acc + messages.messages.length,
+      0
+    );
+  };
+
   const tagNames = [UNTAGGED, ...tags];
 
   return (
-    <div className="grid">
-      {showMenu && (
-        <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
-          <Menu
-            options={tagNames}
-            selectedOption={selectedTag}
-            setSelectedOption={setSelectedTag}
-            hideAllOption
-          />
-        </div>
-      )}
-      <div className="w-4/5 px-4 py-4 overflow-auto justify-self-end">
-        <MergedTopicsMessageList
-          tag={selectedTag}
-          topicMessages={getMessagesForTag(selectedTag)}
-          doTopicColoring
-        ></MergedTopicsMessageList>
-      </div>
-    </div>
+    <MessagesDisplay
+      menuOptions={tagNames}
+      showMenu={showMenu}
+      hideAllOption
+      selectedOption={selectedTag}
+      setSelectedOption={setSelectedTag}
+      getMessageCountForSelectedOption={getMessageCountForTag}
+    >
+      <MergedTopicsMessageList
+        tag={selectedTag}
+        topicMessages={getMessagesForTag(selectedTag)}
+        doTopicColoring
+      ></MergedTopicsMessageList>
+    </MessagesDisplay>
   );
 };
 
