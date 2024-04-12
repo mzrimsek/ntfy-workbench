@@ -62,8 +62,6 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
 
   const tagNames = [UNTAGGED, ...tags];
 
-  // if show menu
-
   return (
     <div className="grid">
       {showMenu && (
