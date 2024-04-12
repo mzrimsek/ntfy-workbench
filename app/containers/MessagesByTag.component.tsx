@@ -25,7 +25,9 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     getTopicConfig(topic, topics)
   );
 
-  const topicConfigsWithNoTags = topicConfigs.filter((x) => !x?.tags?.length);
+  const topicConfigsWithNoTags = topicConfigs.filter(
+    (topic) => !topic?.tags?.length
+  );
   const untaggedTopicMessagesList = topicConfigsWithNoTags.map(
     (topicConfig) => {
       const messages = getMessagesForTopic(messageMap, topicConfig?.name);
@@ -36,7 +38,9 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     }
   );
 
-  const topicConfigsWithTags = topicConfigs.filter((x) => x?.tags?.length);
+  const topicConfigsWithTags = topicConfigs.filter(
+    (topic) => topic?.tags?.length
+  );
   const topicMessagesList = topicConfigsWithTags.map((topicConfig) => {
     const messages = getMessagesForTopic(messageMap, topicConfig?.name);
     return {
@@ -49,7 +53,9 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     if (tag === UNTAGGED) {
       return untaggedTopicMessagesList;
     }
-    return topicMessagesList.filter((x) => x.topicConfig?.tags?.includes(tag));
+    return topicMessagesList.filter((messages) =>
+      messages.topicConfig?.tags?.includes(tag)
+    );
   };
 
   const tagNames = [UNTAGGED, ...tags];

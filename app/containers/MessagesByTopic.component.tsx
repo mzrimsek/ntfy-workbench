@@ -46,7 +46,9 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
 
   const getMessageCountForTopic = (topic: string) => {
     const messageMetadata = Object.values(messageMetadataMap);
-    const messagesForTopic = messageMetadata.filter((x) => x.topic === topic);
+    const messagesForTopic = messageMetadata.filter(
+      (metadata) => metadata.topic === topic
+    );
     const unacknowledgedMessages = messagesForTopic.filter(
       (x) => !x.acknowledged
     );
