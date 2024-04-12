@@ -1,8 +1,8 @@
 import React from "react";
-import Menu from "~/components/Menu.component";
 import MergedTopicsMessageList from "~/components/MergedTopicsMessageList.component";
 import { NtfyMessage, Topic, TopicMessages, UNTAGGED } from "~/models";
 import { getMessagesForTopic, getTopicConfig } from "~/utils";
+import MessagesDisplay from "./MessagesDisplay.component";
 
 type MessagesByTagProps = {
   messageMap: Record<string, NtfyMessage>;
@@ -10,6 +10,9 @@ type MessagesByTagProps = {
   tags: Array<string>;
   selectedTag: string;
   setSelectedTag: (index: string) => void;
+  showMenu: boolean;
+  setShowMenu: (showMenu: boolean) => void;
+  screenSize: number;
 };
 
 const MessagesByTag: React.FC<MessagesByTagProps> = ({
@@ -18,6 +21,9 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
   tags,
   selectedTag,
   setSelectedTag,
+  showMenu,
+  setShowMenu,
+  screenSize,
 }) => {
   const topicNames = topics.map((topic) => topic.name);
   const sortedTopics = topicNames.sort((a, b) => a.localeCompare(b));
@@ -25,7 +31,9 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     getTopicConfig(topic, topics)
   );
 
-  const topicConfigsWithNoTags = topicConfigs.filter((x) => !x?.tags?.length);
+  const topicConfigsWithNoTags = topicConfigs.filter(
+    (topic) => !topic?.tags?.length
+  );
   const untaggedTopicMessagesList = topicConfigsWithNoTags.map(
     (topicConfig) => {
       const messages = getMessagesForTopic(messageMap, topicConfig?.name);
@@ -36,7 +44,9 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     }
   );
 
-  const topicConfigsWithTags = topicConfigs.filter((x) => x?.tags?.length);
+  const topicConfigsWithTags = topicConfigs.filter(
+    (topic) => topic?.tags?.length
+  );
   const topicMessagesList = topicConfigsWithTags.map((topicConfig) => {
     const messages = getMessagesForTopic(messageMap, topicConfig?.name);
     return {
@@ -49,29 +59,37 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     if (tag === UNTAGGED) {
       return untaggedTopicMessagesList;
     }
-    return topicMessagesList.filter((x) => x.topicConfig?.tags?.includes(tag));
+    return topicMessagesList.filter((messages) =>
+      messages.topicConfig?.tags?.includes(tag)
+    );
+  };
+
+  const getMessageCountForTag = (tag: string) => {
+    return getMessagesForTag(tag).reduce(
+      (acc, messages) => acc + messages.messages.length,
+      0
+    );
   };
 
   const tagNames = [UNTAGGED, ...tags];
 
   return (
-    <div className="grid">
-      <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
-        <Menu
-          options={tagNames}
-          selectedOption={selectedTag}
-          setSelectedOption={setSelectedTag}
-          hideAllOption
-        />
-      </div>
-      <div className="w-4/5 px-4 py-4 overflow-auto justify-self-end">
-        <MergedTopicsMessageList
-          tag={selectedTag}
-          topicMessages={getMessagesForTag(selectedTag)}
-          doTopicColoring
-        ></MergedTopicsMessageList>
-      </div>
-    </div>
+    <MessagesDisplay
+      menuOptions={tagNames}
+      showMenu={showMenu}
+      setShowMenu={setShowMenu}
+      hideAllOption
+      selectedOption={selectedTag}
+      setSelectedOption={setSelectedTag}
+      getMessageCountForSelectedOption={getMessageCountForTag}
+      screenSize={screenSize}
+    >
+      <MergedTopicsMessageList
+        tag={selectedTag}
+        topicMessages={getMessagesForTag(selectedTag)}
+        doTopicColoring
+      ></MergedTopicsMessageList>
+    </MessagesDisplay>
   );
 };
 

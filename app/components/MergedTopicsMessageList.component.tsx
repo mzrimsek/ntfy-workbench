@@ -14,7 +14,7 @@ const MergedTopicsMessageList: React.FC<MergedTopicsMessageListProps> = ({
   doTopicColoring,
 }) => {
   const mergedMessages = topicMessages
-    .map((x) => x.messages)
+    .map((messages) => messages.messages)
     .flat()
     .sort((a, b) => a.time - b.time);
 

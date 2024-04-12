@@ -1,7 +1,7 @@
 import React from "react";
-import Menu from "~/components/Menu.component";
 import TopicMessageList from "~/components/TopicMessageList.component";
 import { ALL_OPTIONS, MessageMetadata, NtfyMessage, Topic } from "~/models";
+import MessagesDisplay from "./MessagesDisplay.component";
 
 type MessagesByTopicProps = {
   messageMap: Record<string, NtfyMessage>;
@@ -10,6 +10,9 @@ type MessagesByTopicProps = {
   selectedTopic: string;
   setSelectedTopic: (topic: string) => void;
   acknowledgeTopic?: (topic: string) => void;
+  showMenu: boolean;
+  setShowMenu: (showMenu: boolean) => void;
+  screenSize: number;
 };
 
 const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
@@ -19,6 +22,9 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   selectedTopic,
   setSelectedTopic,
   acknowledgeTopic,
+  showMenu,
+  setShowMenu,
+  screenSize,
 }) => {
   const getMessagesForSelectedTopic = () => {
     let messages: Array<NtfyMessage> = Object.values(messageMap);
@@ -46,7 +52,9 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
 
   const getMessageCountForTopic = (topic: string) => {
     const messageMetadata = Object.values(messageMetadataMap);
-    const messagesForTopic = messageMetadata.filter((x) => x.topic === topic);
+    const messagesForTopic = messageMetadata.filter(
+      (metadata) => metadata.topic === topic
+    );
     const unacknowledgedMessages = messagesForTopic.filter(
       (x) => !x.acknowledged
     );
@@ -54,34 +62,23 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   };
 
   return (
-    <div className="grid">
-      <div className="w-1/5 border-r border-gray-200 fixed overflow-y-auto top-20 bottom-0">
-        <Menu
-          options={getTopicNames()}
-          selectedOption={selectedTopic}
-          setSelectedOption={setSelectedTopic}
-          getCountForOption={getMessageCountForTopic}
-        />
-      </div>
-      <div className="w-4/5 px-4 py-4 overflow-auto justify-self-end">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold mb-0 mr-4">{getTitle()}</h1>
-          {shouldRenderTopicAcknowledgementButton && (
-            <button
-              className="px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800"
-              onClick={() => acknowledgeTopic(selectedTopic)}
-            >
-              Acknowledge Topic
-            </button>
-          )}
-        </div>
-        <TopicMessageList
-          messages={messages}
-          doTopicColoring={doTopicColoring}
-        />
-      </div>
-    </div>
+    <MessagesDisplay
+      menuOptions={getTopicNames()}
+      showMenu={showMenu}
+      setShowMenu={setShowMenu}
+      selectedOption={selectedTopic}
+      setSelectedOption={setSelectedTopic}
+      getMessageCountForSelectedOption={getMessageCountForTopic}
+      title={getTitle()}
+      shouldRenderTopicAcknowledgementButton={
+        shouldRenderTopicAcknowledgementButton
+      }
+      acknowledgeSelectedOption={acknowledgeTopic}
+      screenSize={screenSize}
+    >
+      <TopicMessageList messages={messages} doTopicColoring={doTopicColoring} />
+    </MessagesDisplay>
   );
 };
-// px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800
+
 export default MessagesByTopic;
