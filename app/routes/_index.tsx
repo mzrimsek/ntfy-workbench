@@ -165,17 +165,19 @@ export default function Index(): JSX.Element {
     });
   }, [loaderData, messageMetadataMap]);
 
-  useEffect(() => {
+  const updateLayoutState = () => {
     const isLargeScreen = window.document.body.clientWidth >= SCREEN_SIZES.md;
     setShowMenu(isLargeScreen);
     setScreenSize(window.document.body.clientWidth);
+  };
+
+  useEffect(() => {
+    updateLayoutState();
   }, []);
 
   useEffect(() => {
     const handleResize = () => {
-      const isLargeScreen = window.document.body.clientWidth >= SCREEN_SIZES.md;
-      setShowMenu(isLargeScreen);
-      setScreenSize(window.document.body.clientWidth);
+      updateLayoutState();
     };
 
     window.addEventListener("resize", handleResize);
