@@ -60,6 +60,7 @@ export default function Index(): JSX.Element {
   const [selectedTopic, setSelectedTopic] = useState<string>(ALL_OPTIONS);
   const [selectedTag, setSelectedTag] = useState<string>(UNTAGGED);
   const [showMenu, setShowMenu] = useState<boolean>(true);
+  const [screenSize, setScreenSize] = useState<number>(0);
 
   // const acknowledgeMessage = (id: string) => {
   //   const metadata = messageMetadataMap[id];
@@ -107,6 +108,7 @@ export default function Index(): JSX.Element {
           setSelectedTopic={setSelectedTopic}
           // acknowledgeTopic={acknowledgeAllMessagesForTopic}
           showMenu={showMenu}
+          screenSize={screenSize}
         ></MessagesByTopic>
       );
     }
@@ -120,6 +122,7 @@ export default function Index(): JSX.Element {
           selectedTag={selectedTag}
           setSelectedTag={setSelectedTag}
           showMenu={showMenu}
+          screenSize={screenSize}
         ></MessagesByTag>
       );
     }
@@ -162,8 +165,9 @@ export default function Index(): JSX.Element {
 
   useEffect(() => {
     const handleResize = () => {
-      const isLargeScreen = window.document.body.clientWidth > SCREEN_SIZES.md;
+      const isLargeScreen = window.document.body.clientWidth >= SCREEN_SIZES.md;
       setShowMenu(isLargeScreen);
+      setScreenSize(window.document.body.clientWidth);
     };
 
     window.addEventListener("resize", handleResize);

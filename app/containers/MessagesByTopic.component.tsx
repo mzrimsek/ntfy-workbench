@@ -11,6 +11,7 @@ type MessagesByTopicProps = {
   setSelectedTopic: (topic: string) => void;
   acknowledgeTopic?: (topic: string) => void;
   showMenu: boolean;
+  screenSize: number;
 };
 
 const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
@@ -21,6 +22,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   setSelectedTopic,
   acknowledgeTopic,
   showMenu,
+  screenSize,
 }) => {
   const getMessagesForSelectedTopic = () => {
     let messages: Array<NtfyMessage> = Object.values(messageMap);
@@ -69,6 +71,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
         shouldRenderTopicAcknowledgementButton
       }
       acknowledgeSelectedOption={acknowledgeTopic}
+      screenSize={screenSize}
     >
       <TopicMessageList messages={messages} doTopicColoring={doTopicColoring} />
     </MessagesDisplay>

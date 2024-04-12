@@ -11,6 +11,7 @@ type MessagesByTagProps = {
   selectedTag: string;
   setSelectedTag: (index: string) => void;
   showMenu: boolean;
+  screenSize: number;
 };
 
 const MessagesByTag: React.FC<MessagesByTagProps> = ({
@@ -20,6 +21,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
   selectedTag,
   setSelectedTag,
   showMenu,
+  screenSize,
 }) => {
   const topicNames = topics.map((topic) => topic.name);
   const sortedTopics = topicNames.sort((a, b) => a.localeCompare(b));
@@ -77,6 +79,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
       selectedOption={selectedTag}
       setSelectedOption={setSelectedTag}
       getMessageCountForSelectedOption={getMessageCountForTag}
+      screenSize={screenSize}
     >
       <MergedTopicsMessageList
         tag={selectedTag}
