@@ -108,6 +108,7 @@ export default function Index(): JSX.Element {
           setSelectedTopic={setSelectedTopic}
           // acknowledgeTopic={acknowledgeAllMessagesForTopic}
           showMenu={showMenu}
+          setShowMenu={setShowMenu}
           screenSize={screenSize}
         ></MessagesByTopic>
       );
@@ -122,6 +123,7 @@ export default function Index(): JSX.Element {
           selectedTag={selectedTag}
           setSelectedTag={setSelectedTag}
           showMenu={showMenu}
+          setShowMenu={setShowMenu}
           screenSize={screenSize}
         ></MessagesByTag>
       );

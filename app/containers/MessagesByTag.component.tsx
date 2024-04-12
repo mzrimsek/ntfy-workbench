@@ -11,6 +11,7 @@ type MessagesByTagProps = {
   selectedTag: string;
   setSelectedTag: (index: string) => void;
   showMenu: boolean;
+  setShowMenu: (showMenu: boolean) => void;
   screenSize: number;
 };
 
@@ -21,6 +22,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
   selectedTag,
   setSelectedTag,
   showMenu,
+  setShowMenu,
   screenSize,
 }) => {
   const topicNames = topics.map((topic) => topic.name);
@@ -75,6 +77,7 @@ const MessagesByTag: React.FC<MessagesByTagProps> = ({
     <MessagesDisplay
       menuOptions={tagNames}
       showMenu={showMenu}
+      setShowMenu={setShowMenu}
       hideAllOption
       selectedOption={selectedTag}
       setSelectedOption={setSelectedTag}

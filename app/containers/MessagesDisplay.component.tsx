@@ -7,6 +7,7 @@ interface MessagesDisplayProps {
   children?: React.ReactNode;
   menuOptions: Array<string>;
   showMenu: boolean;
+  setShowMenu: (showMenu: boolean) => void;
   hideAllOption?: boolean;
   selectedOption: string;
   setSelectedOption: (option: string) => void;
@@ -21,6 +22,7 @@ const MessagesDisplay: React.FC<MessagesDisplayProps> = ({
   children,
   menuOptions,
   showMenu,
+  setShowMenu,
   hideAllOption,
   selectedOption,
   setSelectedOption,
@@ -49,6 +51,14 @@ const MessagesDisplay: React.FC<MessagesDisplayProps> = ({
 
   const shouldRenderList = screenSize >= SCREEN_SIZES.md || !showMenu;
 
+  const handleOptionSelected = (option: string) => {
+    // if the screen is small, hide the menu when an option is selected
+    if (screenSize < SCREEN_SIZES.md) {
+      setShowMenu(false);
+    }
+    setSelectedOption(option);
+  };
+
   return (
     <div className="grid">
       {showMenu && (
@@ -56,7 +66,7 @@ const MessagesDisplay: React.FC<MessagesDisplayProps> = ({
           <Menu
             options={menuOptions}
             selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
+            setSelectedOption={handleOptionSelected}
             getCountForOption={getMessageCountForSelectedOption}
             hideAllOption={hideAllOption}
           />

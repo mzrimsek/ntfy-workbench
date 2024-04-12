@@ -11,6 +11,7 @@ type MessagesByTopicProps = {
   setSelectedTopic: (topic: string) => void;
   acknowledgeTopic?: (topic: string) => void;
   showMenu: boolean;
+  setShowMenu: (showMenu: boolean) => void;
   screenSize: number;
 };
 
@@ -22,6 +23,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
   setSelectedTopic,
   acknowledgeTopic,
   showMenu,
+  setShowMenu,
   screenSize,
 }) => {
   const getMessagesForSelectedTopic = () => {
@@ -63,6 +65,7 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
     <MessagesDisplay
       menuOptions={getTopicNames()}
       showMenu={showMenu}
+      setShowMenu={setShowMenu}
       selectedOption={selectedTopic}
       setSelectedOption={setSelectedTopic}
       getMessageCountForSelectedOption={getMessageCountForTopic}
