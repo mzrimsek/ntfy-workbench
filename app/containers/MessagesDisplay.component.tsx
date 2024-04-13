@@ -52,7 +52,6 @@ const MessagesDisplay: React.FC<MessagesDisplayProps> = ({
   const shouldRenderList = screenSize >= SCREEN_SIZES.md || !showMenu;
 
   const handleOptionSelected = (option: string) => {
-    // if the screen is small, hide the menu when an option is selected
     if (screenSize < SCREEN_SIZES.md) {
       setShowMenu(false);
     }
@@ -75,7 +74,7 @@ const MessagesDisplay: React.FC<MessagesDisplayProps> = ({
       {shouldRenderList && (
         <div className={listClassName}>
           <div className="flex items-center justify-between">
-            {title && <h1 className="text-xl font-bold mb-0 mr-4">{title}</h1>}
+            {title && <h1 className="text-xl font-bold mr-4">{title}</h1>}
             {shouldRenderAcknowledgementButton && (
               <button
                 className="px-4 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-gray-200 hover:text-gray-800"

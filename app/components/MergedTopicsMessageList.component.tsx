@@ -21,7 +21,7 @@ const MergedTopicsMessageList: React.FC<MergedTopicsMessageListProps> = ({
   const topics = topicMessages.map((x) => x.topicConfig?.name).join(", ");
 
   return (
-    <div className="rounded-lg shadow-md px-4 py-4">
+    <div className="rounded-lg shadow-md px-1 py-1">
       <div className="flex flex-col mb-4">
         <h1 className="text-xl font-bold">{tag}</h1>
         <h2 className="text-md text-gray-400 italic">{topics}</h2>
