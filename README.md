@@ -1,20 +1,32 @@
 # NTFY Workbench
 
-A simple web app to manage NTFY topics wtih tags.
+A simple web app to manage [ntfy.sh](https://ntfy.sh) topics. It allows you to configure topics so that you can view by topic or by tag. Tagging allows you to group related topics together to make it easier to get a quick overview of what's happening for a particular project or area of interest. You can have as many tags as you want for a topic so you can group them pretty much however you would like.
+
+By Topic View
+![By Topic View](./docs/messages-by-topic.png)
+
+By Tag View
+![By Tag View](./docs/messages-by-tag.png)
+
+## Features
+
+- View topics by tag
+- View topics by topic
+- Message counter for topics and tags
+- Mobile friendly view (probably not perfect but it works pretty decently)
+
+## Planned Features
+
+- Message acknowledgements (mark as read)
+- Ability to configure a webhook for a topic or tag with potential filtering by message contents
+- Ability to configure everything from the UI (currently requires a config file)
+- Maybe some other shit but I work on this in my free time so bear with me
 
 ## Running the app
 
-### Locally
+Using Docker is the easiet way to run the app, but you can also build it locally.
 
-1. Install dependencies
-
-```shell
-npm install
-```
-
-2. Create a `config.json` file and drop it in the config folder. See the example below.
-
-#### Example config.json
+### Example config.json
 
 ```json
 {
@@ -41,13 +53,15 @@ npm install
 }
 ```
 
-3. Start the app
-
-```shell
-npm run dev
-```
-
 ### Docker
+
+#### Docker Run
+
+1. Create a `config.json` file and drop it in the desired directory. See the example above.
+
+2. Run `docker run -p 3000:3000 -v /path/to/config:/app/config ghcr.io/mzrimsek/ntfy-workbench:latest`
+
+3. Access the app at `http://localhost:3000`
 
 #### Docker Compose
 
@@ -88,3 +102,19 @@ docker run -p 3000:3000 -v /path/to/config:/app/config ntfy-workbench
 ```
 
 5. Access the app at `http://localhost:3000`
+
+### Locally
+
+1. Install dependencies
+
+```shell
+npm install
+```
+
+2. Create a `config.json` file and drop it in the config folder. See the example above.
+
+3. Start the app
+
+```shell
+npm run dev
+```
