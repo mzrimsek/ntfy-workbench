@@ -48,7 +48,6 @@ Using Docker is the easiet way to run the app, but you can also build it locally
       "name": "test3"
     }
   ],
-  ,
   "ntfy": {
     "url": "https://ntfy.sh",
     "apiKey": "your-api-key"
