@@ -14,6 +14,7 @@ By Tag View
 - View topics by topic
 - Message counter for topics and tags
 - Mobile friendly view (probably not perfect but it works pretty decently)
+- Adjusts to dark or light mode based on your system settings
 
 ## Planned Features
 
@@ -21,6 +22,7 @@ By Tag View
 - Ability to configure a webhook for a topic or tag with potential filtering by message contents
 - Ability to configure everything from the UI (currently requires a config file)
 - Maybe some other shit but I work on this in my free time so bear with me
+- Ability to configure dark or light mode in configuration
 
 ## Running the app
 
