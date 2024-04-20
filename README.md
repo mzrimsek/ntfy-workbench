@@ -22,8 +22,8 @@ By Tag View
 - Message acknowledgements (mark as read)
 - Ability to configure a webhook for a topic or tag with potential filtering by message contents
 - Ability to configure everything from the UI (currently requires a config file)
-- Maybe some other shit but I work on this in my free time so bear with me
 - Ability to configure dark or light mode in configuration
+- Maybe some other shit but I work on this in my free time so bear with me
 
 ## Running the app
 
