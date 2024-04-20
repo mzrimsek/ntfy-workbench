@@ -15,6 +15,7 @@ By Tag View
 - Message counter for topics and tags
 - Mobile friendly view (probably not perfect but it works pretty decently)
 - Adjusts to dark or light mode based on your system settings
+- Generates colors for messages based on the topic name
 
 ## Planned Features
 
