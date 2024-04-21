@@ -32,5 +32,6 @@ EXPOSE 3000
 ENV PORT 3000
 
 VOLUME /app/config
+VOLUME /app/data
 
 CMD ["npm", "run", "start"]

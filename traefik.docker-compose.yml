@@ -58,6 +58,7 @@ services:
     image: ghcr.io/mzrimsek/ntfy-workbench:latest
     volumes:
       - ${CONFIG_DIR}/ntfy-workbench/config:/app/config
+      - ${CONFIG_DIR}/ntfy-workbench/data:/app/data
     networks:
       - public
     labels:

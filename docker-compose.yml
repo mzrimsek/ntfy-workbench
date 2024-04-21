@@ -7,5 +7,6 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ${CONFIG_DIR}:/app/config
+      - ${CONFIG_DIR}/config:/app/config
+      - ${CONFIG_DIR}/data:/app/data
     restart: unless-stopped

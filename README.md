@@ -61,11 +61,19 @@ Using Docker is the easiet way to run the app, but you can also build it locally
 
 1. Create a `config.json` file and drop it in the desired directory. See the example above.
 
-2. Run `docker run -p 3000:3000 -v /path/to/config:/app/config ghcr.io/mzrimsek/ntfy-workbench:latest`
+2. Run `docker run -p 3000:3000 -v /path/to/config:/app/config -v /path/to/data:/app/data ghcr.io/mzrimsek/ntfy-workbench:latest`
 
 3. Access the app at `http://localhost:3000`
 
 #### Docker Compose
+
+The file structure I prefer is as follows, where the app directory is just your desired directory to hold data for the application volumes
+
+```
+/app
+  /config
+  /data
+```
 
 1. Create a `config.json` file and drop it in the desired directory. See the example above.
 
@@ -74,7 +82,7 @@ Using Docker is the easiet way to run the app, but you can also build it locally
 3. Create `.env` file in the root directory with the following content:
 
 ```shell
-CONFIG_DIR=/path/to/folder/with/config
+CONFIG_DIR=/path/to/top/directory/for/app/volumes
 ```
 
 4. Run the app from the root directory
