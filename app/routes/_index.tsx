@@ -4,21 +4,18 @@ import { NtfyService } from "~/services";
 import {
   ALL_OPTIONS,
   ApplicationConfig,
-  JsonConfig,
   MessageMetadata,
   NtfyMessage,
   SCREEN_SIZES,
   UNTAGGED,
 } from "~/models";
 import { useLoaderData } from "@remix-run/react";
-import { promises as fs } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import { DisplayState } from "~/enums";
 import MessagesByTag from "~/containers/MessagesByTag.component";
 import DisplayStateSwitch from "~/components/DisplayStateSwitch.component";
 import MessagesByTopic from "~/containers/MessagesByTopic.component";
 import HamburgerButton from "~/components/HamburgerButton.component";
+import { getAppConfig } from "~/server/getAppConfig.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -28,22 +25,7 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader(): Promise<TypedResponse<ApplicationConfig>> {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const jsonDirectory = `${__dirname}/../../config`;
-  const fileContents = await fs.readFile(
-    `${jsonDirectory}/config.json`,
-    "utf-8"
-  );
-  const jsonConfig = JSON.parse(fileContents) as JsonConfig;
-
-  const tags = jsonConfig.topics.reduce((acc, topic) => {
-    return [...acc, ...(topic.tags ?? [])];
-  }, [] as string[]);
-  const uniqueTags = Array.from(new Set(tags));
-
-  const appConfig: ApplicationConfig = { ...jsonConfig, tags: uniqueTags };
-
+  const appConfig = await getAppConfig();
   return json(appConfig);
 }
 
