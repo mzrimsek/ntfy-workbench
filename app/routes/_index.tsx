@@ -137,6 +137,9 @@ export default function Index(): JSX.Element {
     const ntfyApiKey = loaderData.ntfy.apiKey;
     const ntfyService = new NtfyService(ntfyUrl, ntfyApiKey);
 
+    // Create an AbortController to handle cleanup
+    const abortController = new AbortController();
+
     const processMessage = (message: NtfyMessage) => {
       console.log(message);
 
@@ -150,20 +153,33 @@ export default function Index(): JSX.Element {
         return { ...prev, [id]: message };
       });
 
-      const metadata = messageMetadataMap[id];
-      if (!metadata) {
-        setMessageMetadataMap((prev) => {
+      // Use functional update to access current state
+      setMessageMetadataMap((prev) => {
+        // Only add metadata if it doesn't already exist
+        if (!prev[id]) {
           return { ...prev, [id]: { id, topic, acknowledged: false } };
-        });
-      }
+        }
+        return prev;
+      });
     };
 
     const ntfyTopics = loaderData.topics.map((topic) => topic.name);
-    ntfyService.subscribeToNftyTopics(ntfyTopics, async (event) => {
-      const data = JSON.parse(event.data) as NtfyMessage;
-      processMessage(data);
-    });
-  }, [loaderData, messageMetadataMap]);
+
+    // Start the subscription with abort signal
+    ntfyService.subscribeToNftyTopics(
+      ntfyTopics,
+      async (event) => {
+        const data = JSON.parse(event.data) as NtfyMessage;
+        processMessage(data);
+      },
+      abortController.signal
+    );
+
+    // Cleanup function to abort the subscription when effect re-runs or component unmounts
+    return () => {
+      abortController.abort();
+    };
+  }, [loaderData]); // Only depend on loaderData, not messageMetadataMap
 
   const updateLayoutState = () => {
     const isLargeScreen = window.document.body.clientWidth >= SCREEN_SIZES.md;
