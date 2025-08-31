@@ -23,13 +23,15 @@ export class NtfyService {
 
   subscribeToNftyTopics = async (
     topics: string[],
-    eventHandler: (event: EventSourceMessage) => unknown
+    eventHandler: (event: EventSourceMessage) => unknown,
+    abortSignal?: AbortSignal
   ) => {
     const url = `${this.getNtfyUrl(topics)}/sse?since=all`;
     await fetchEventSource(url, {
       headers: {
         Authorization: `Bearer ${this.ntfyApiKey}`,
       },
+      signal: abortSignal,
       onopen: async () => {
         console.log(`EventSource connected to ${url}`);
       },

@@ -13,6 +13,8 @@ export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
     { rel: "stylesheet", href: stylesheet },
+    { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+    { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
   ];
 };
 
