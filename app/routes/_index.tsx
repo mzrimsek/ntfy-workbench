@@ -153,10 +153,9 @@ export default function Index(): JSX.Element {
         return { ...prev, [id]: message };
       });
 
-      // Use functional update to access current state
       setMessageMetadataMap((prev) => {
-        // Only add metadata if it doesn't already exist
-        if (!prev[id]) {
+        const exists = prev[id];
+        if (!exists) {
           return { ...prev, [id]: { id, topic, acknowledged: false } };
         }
         return prev;
@@ -179,7 +178,7 @@ export default function Index(): JSX.Element {
     return () => {
       abortController.abort();
     };
-  }, [loaderData]); // Only depend on loaderData, not messageMetadataMap
+  }, [loaderData]);
 
   const updateLayoutState = () => {
     const isLargeScreen = window.document.body.clientWidth >= SCREEN_SIZES.md;
