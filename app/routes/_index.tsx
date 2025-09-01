@@ -4,7 +4,7 @@ import { NtfyService } from "~/services";
 import {
   ALL_OPTIONS,
   ApplicationConfig,
-  JsonConfig,
+  UserProvidedConfig,
   MessageMetadata,
   NtfyMessage,
   SCREEN_SIZES,
@@ -19,6 +19,7 @@ import MessagesByTag from "~/containers/MessagesByTag.component";
 import DisplayStateSwitch from "~/components/DisplayStateSwitch.component";
 import MessagesByTopic from "~/containers/MessagesByTopic.component";
 import HamburgerButton from "~/components/HamburgerButton.component";
+import YAML from "yaml";
 
 export const meta: MetaFunction = () => {
   return [
@@ -30,19 +31,36 @@ export const meta: MetaFunction = () => {
 export async function loader(): Promise<TypedResponse<ApplicationConfig>> {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const jsonDirectory = `${__dirname}/../../config`;
-  const fileContents = await fs.readFile(
-    `${jsonDirectory}/config.json`,
-    "utf-8"
-  );
-  const jsonConfig = JSON.parse(fileContents) as JsonConfig;
+  const configDirectory = `${__dirname}/../../config`;
 
-  const tags = jsonConfig.topics.reduce((acc, topic) => {
+  let config: UserProvidedConfig;
+
+  try {
+    // Try YAML first (preferred format)
+    const yamlPath = `${configDirectory}/config.yaml`;
+    const yamlContent = await fs.readFile(yamlPath, "utf-8");
+    config = YAML.parse(yamlContent) as UserProvidedConfig;
+  } catch (yamlError) {
+    try {
+      // Fall back to JSON for backward compatibility
+      const jsonPath = `${configDirectory}/config.json`;
+      const jsonContent = await fs.readFile(jsonPath, "utf-8");
+      config = JSON.parse(jsonContent) as UserProvidedConfig;
+    } catch (jsonError) {
+      throw new Error(
+        `Configuration file not found. Please create either 'config.yaml' or 'config.json' in the config directory.\n` +
+          `YAML error: ${yamlError}\n` +
+          `JSON error: ${jsonError}`
+      );
+    }
+  }
+
+  const tags = config.topics.reduce((acc, topic) => {
     return [...acc, ...(topic.tags ?? [])];
   }, [] as string[]);
   const uniqueTags = Array.from(new Set(tags));
 
-  const appConfig: ApplicationConfig = { ...jsonConfig, tags: uniqueTags };
+  const appConfig: ApplicationConfig = { ...config, tags: uniqueTags };
 
   return json(appConfig);
 }

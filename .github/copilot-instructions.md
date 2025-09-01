@@ -17,7 +17,8 @@
   - **Utils** (`app/utils/`): Utility functions (e.g., color generation, topic helpers).
   - **Routes** (`app/routes/`): Route handlers (Remix-style, e.g., `_index.tsx`).
 - **Config:**
-  - App configuration is loaded from a `config.json` file (see README for schema). Place this in the `config/` directory for local dev.
+  - App configuration is loaded from a `config.yaml` file (with fallback to `config.json` for backward compatibility). See README for schema. Place this in the `config/` directory for local dev.
+  - YAML format is preferred for its readability and comment support.
 - **Styling:**
   - Uses Tailwind CSS (`tailwind.config.ts`, `postcss.config.js`).
   - Color assignment for topics/messages is handled in `app/utils/color.utils.ts`.
@@ -27,7 +28,7 @@
 - **Local Development:**
   - Install dependencies: `npm install`
   - Start dev server: `npm run dev`
-  - Place `config.json` in `config/`.
+  - Place `config.yaml` (or `config.json`) in `config/`.
 - **Docker:**
   - See README for Docker and Docker Compose instructions. Mount your config directory to `/app/config`.
 - **Build:**
@@ -53,11 +54,11 @@
   - All topic/message data is fetched from or sent to ntfy.sh via `ntfy.service.ts`.
 - **Webhooks:**
   - Planned feature: webhook configuration via `webhook.service.ts`.
-- **Configurable via `config.json`** for topics, tags, and ntfy.sh API details.
+- **Configurable via `config.yaml`** (or `config.json` for backward compatibility) for topics, tags, and ntfy.sh API details.
 
 ## Examples
 
-- To add a new topic model, update `app/models/topics.models.ts` and reference it in `config.json`.
+- To add a new topic model, update `app/models/topics.models.ts` and reference it in `config.yaml` (or `config.json`).
 - To add a new view, create a container in `app/containers/` and compose with components from `app/components/`.
 
 ---
