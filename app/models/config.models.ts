@@ -2,6 +2,7 @@ export interface Topic {
   name: string;
   description?: string;
   tags?: Array<string>;
+  color?: string;
 }
 
 export interface NtfyConfig {

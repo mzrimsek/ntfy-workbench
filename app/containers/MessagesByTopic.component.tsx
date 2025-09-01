@@ -76,7 +76,11 @@ const MessagesByTopic: React.FC<MessagesByTopicProps> = ({
       acknowledgeSelectedOption={acknowledgeTopic}
       screenSize={screenSize}
     >
-      <TopicMessageList messages={messages} doTopicColoring={doTopicColoring} />
+      <TopicMessageList
+        messages={messages}
+        doTopicColoring={doTopicColoring}
+        topics={topics}
+      />
     </MessagesDisplay>
   );
 };

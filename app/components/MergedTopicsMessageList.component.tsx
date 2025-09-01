@@ -19,6 +19,11 @@ const MergedTopicsMessageList: React.FC<MergedTopicsMessageListProps> = ({
     .sort((a, b) => a.time - b.time);
 
   const topics = topicMessages.map((x) => x.topicConfig?.name).join(", ");
+  const topicConfigs = topicMessages
+    .map((x) => x.topicConfig)
+    .filter(
+      (config): config is NonNullable<typeof config> => config !== undefined
+    );
 
   return (
     <div className="rounded-lg shadow-md px-1 py-1">
@@ -29,6 +34,7 @@ const MergedTopicsMessageList: React.FC<MergedTopicsMessageListProps> = ({
       <TopicMessageList
         messages={mergedMessages}
         doTopicColoring={doTopicColoring}
+        topics={topicConfigs}
       ></TopicMessageList>
     </div>
   );
