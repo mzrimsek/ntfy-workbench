@@ -15,7 +15,7 @@ By Tag View
 - Message counter for topics and tags
 - Mobile friendly view (probably not perfect but it works pretty decently)
 - Adjusts to dark or light mode based on your system settings
-- Generates colors for messages based on the topic name
+- Configurable colors for topics with automatic fallback to generated colors
 
 ## Planned Features
 
@@ -27,9 +27,48 @@ By Tag View
 
 ## Running the app
 
-Using Docker is the easiet way to run the app, but you can also build it locally.
+Using Docker is the easiest way to run the app, but you can also build it locally.
 
-### Example config.json
+### Configuration
+
+The app supports both YAML and JSON configuration formats. YAML is recommended for better readability and maintainability.
+
+#### Example config.yaml (Recommended)
+
+```yaml
+# ntfy-workbench configuration
+topics:
+  - name: test
+    description: test description
+    tags:
+      - tag1
+    color: "#3b82f6" # Optional: Custom hex color for this topic
+
+  - name: test2
+    description: test description
+    tags:
+      - tag1
+      - tag2
+    # No color specified - will use auto-generated color
+
+  - name: test3
+    # No description, tags, or color
+
+ntfy:
+  url: https://ntfy.sh
+  apiKey: your-api-key
+```
+
+##### Topic Color Configuration
+
+Each topic can optionally include a `color` property to customize its appearance:
+
+- **color**: Optional hex color value (e.g., `#3b82f6`, `#ef4444`, `#10b981`)
+- If no color is specified, the app will auto-generate a color based on the topic name
+- Colors are used for message backgrounds in the topic view to help visually distinguish different topics
+- The app automatically calculates appropriate text color (black or white) for readability
+
+#### Example config.json (Legacy support)
 
 ```json
 {
@@ -37,7 +76,8 @@ Using Docker is the easiet way to run the app, but you can also build it locally
     {
       "name": "test",
       "description": "test description",
-      "tags": ["tag1"]
+      "tags": ["tag1"],
+      "color": "#3b82f6"
     },
     {
       "name": "test2",
@@ -48,7 +88,6 @@ Using Docker is the easiet way to run the app, but you can also build it locally
       "name": "test3"
     }
   ],
-  ,
   "ntfy": {
     "url": "https://ntfy.sh",
     "apiKey": "your-api-key"
@@ -56,11 +95,11 @@ Using Docker is the easiet way to run the app, but you can also build it locally
 }
 ```
 
-### Docker
+**Note**: The app will try to load `config.yaml` first, then fall back to `config.json` for backward compatibility.
 
 #### Docker Run
 
-1. Create a `config.json` file and drop it in the desired directory. See the example above.
+1. Create a configuration file (`config.yaml` or `config.json`) and drop it in the desired directory. See the examples above.
 
 2. Run `docker run -p 3000:3000 -v /path/to/config:/app/config ghcr.io/mzrimsek/ntfy-workbench:latest`
 
@@ -68,7 +107,7 @@ Using Docker is the easiet way to run the app, but you can also build it locally
 
 #### Docker Compose
 
-1. Create a `config.json` file and drop it in the desired directory. See the example above.
+1. Create a configuration file (`config.yaml` or `config.json`) and drop it in the desired directory. See the examples above.
 
 2. Download the `docker-compose.yml` file from the repository.
 
@@ -84,13 +123,13 @@ CONFIG_DIR=/path/to/folder/with/config
 docker-compose up -d
 ```
 
-4. Access the app at `http://localhost:3000`
+5. Access the app at `http://localhost:3000`
 
 #### Build the Image
 
 1. Pick a directory for your config location
 
-2. Create a `config.json` file and drop it in the desired directory. See the example above.
+2. Create a configuration file (`config.yaml` or `config.json`) and drop it in the desired directory. See the examples above.
 
 3. Build the image
 
@@ -114,7 +153,7 @@ docker run -p 3000:3000 -v /path/to/config:/app/config ntfy-workbench
 npm install
 ```
 
-2. Create a `config.json` file and drop it in the config folder. See the example above.
+2. Create a configuration file (`config.yaml` or `config.json`) and drop it in the config folder. See the examples above.
 
 3. Start the app
 
