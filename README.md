@@ -27,9 +27,37 @@ By Tag View
 
 ## Running the app
 
-Using Docker is the easiet way to run the app, but you can also build it locally.
+Using Docker is the easiest way to run the app, but you can also build it locally.
 
-### Example config.json
+### Configuration
+
+The app supports both YAML and JSON configuration formats. YAML is recommended for better readability and maintainability.
+
+#### Example config.yaml (Recommended)
+
+```yaml
+# ntfy-workbench configuration
+topics:
+  - name: test
+    description: test description
+    tags:
+      - tag1
+
+  - name: test2
+    description: test description
+    tags:
+      - tag1
+      - tag2
+
+  - name: test3
+    # No description or tags
+
+ntfy:
+  url: https://ntfy.sh
+  apiKey: your-api-key
+```
+
+#### Example config.json (Legacy support)
 
 ```json
 {
@@ -48,7 +76,6 @@ Using Docker is the easiet way to run the app, but you can also build it locally
       "name": "test3"
     }
   ],
-  ,
   "ntfy": {
     "url": "https://ntfy.sh",
     "apiKey": "your-api-key"
@@ -56,11 +83,11 @@ Using Docker is the easiet way to run the app, but you can also build it locally
 }
 ```
 
-### Docker
+**Note**: The app will try to load `config.yaml` first, then fall back to `config.json` for backward compatibility.
 
 #### Docker Run
 
-1. Create a `config.json` file and drop it in the desired directory. See the example above.
+1. Create a configuration file (`config.yaml` or `config.json`) and drop it in the desired directory. See the examples above.
 
 2. Run `docker run -p 3000:3000 -v /path/to/config:/app/config ghcr.io/mzrimsek/ntfy-workbench:latest`
 
@@ -68,7 +95,7 @@ Using Docker is the easiet way to run the app, but you can also build it locally
 
 #### Docker Compose
 
-1. Create a `config.json` file and drop it in the desired directory. See the example above.
+1. Create a configuration file (`config.yaml` or `config.json`) and drop it in the desired directory. See the examples above.
 
 2. Download the `docker-compose.yml` file from the repository.
 
@@ -84,13 +111,13 @@ CONFIG_DIR=/path/to/folder/with/config
 docker-compose up -d
 ```
 
-4. Access the app at `http://localhost:3000`
+5. Access the app at `http://localhost:3000`
 
 #### Build the Image
 
 1. Pick a directory for your config location
 
-2. Create a `config.json` file and drop it in the desired directory. See the example above.
+2. Create a configuration file (`config.yaml` or `config.json`) and drop it in the desired directory. See the examples above.
 
 3. Build the image
 
@@ -114,7 +141,7 @@ docker run -p 3000:3000 -v /path/to/config:/app/config ntfy-workbench
 npm install
 ```
 
-2. Create a `config.json` file and drop it in the config folder. See the example above.
+2. Create a configuration file (`config.yaml` or `config.json`) and drop it in the config folder. See the examples above.
 
 3. Start the app
 

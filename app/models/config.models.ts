@@ -9,11 +9,11 @@ export interface NtfyConfig {
   apiKey: string;
 }
 
-export interface JsonConfig {
+export interface UserProvidedConfig {
   topics: Array<Topic>;
   ntfy: NtfyConfig;
 }
 
-export interface ApplicationConfig extends JsonConfig {
+export interface ApplicationConfig extends UserProvidedConfig {
   tags: Array<string>;
 }
