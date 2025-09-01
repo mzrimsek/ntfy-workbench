@@ -15,7 +15,7 @@ By Tag View
 - Message counter for topics and tags
 - Mobile friendly view (probably not perfect but it works pretty decently)
 - Adjusts to dark or light mode based on your system settings
-- Generates colors for messages based on the topic name
+- Configurable colors for topics with automatic fallback to generated colors
 
 ## Planned Features
 
@@ -42,20 +42,31 @@ topics:
     description: test description
     tags:
       - tag1
+    color: "#3b82f6" # Optional: Custom hex color for this topic
 
   - name: test2
     description: test description
     tags:
       - tag1
       - tag2
+    # No color specified - will use auto-generated color
 
   - name: test3
-    # No description or tags
+    # No description, tags, or color
 
 ntfy:
   url: https://ntfy.sh
   apiKey: your-api-key
 ```
+
+##### Topic Color Configuration
+
+Each topic can optionally include a `color` property to customize its appearance:
+
+- **color**: Optional hex color value (e.g., `#3b82f6`, `#ef4444`, `#10b981`)
+- If no color is specified, the app will auto-generate a color based on the topic name
+- Colors are used for message backgrounds in the topic view to help visually distinguish different topics
+- The app automatically calculates appropriate text color (black or white) for readability
 
 #### Example config.json (Legacy support)
 
@@ -65,7 +76,8 @@ ntfy:
     {
       "name": "test",
       "description": "test description",
-      "tags": ["tag1"]
+      "tags": ["tag1"],
+      "color": "#3b82f6"
     },
     {
       "name": "test2",
