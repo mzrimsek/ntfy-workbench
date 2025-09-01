@@ -47,9 +47,9 @@ const TopicMessage: React.FC<TopicMessageProps> = ({
         )}
         <span className="text-sm">{formattedTime}</span>
       </div>
-      <p>
+      <div>
         <Markdown>{message.message}</Markdown>
-      </p>
+      </div>
     </div>
   );
 };
