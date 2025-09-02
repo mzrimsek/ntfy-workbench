@@ -57,20 +57,24 @@ npm run version:major  # 1.1.1 → 2.0.0
 
 ## Branch Strategy
 
-- **master**: Production releases (stable versions)
-- **develop**: Beta releases (prerelease versions like 1.2.0-beta.1)
+- **develop**: Development branch where versions are automatically incremented (beta releases like 1.2.0-beta.1)
+- **master**: Stable releases that promote existing versions from develop (no new version creation)
 
 ## How It Works
 
-1. Commit with conventional commit format
-2. Push to `develop` or `master` branch
-3. GitHub Actions automatically:
+1. Commit with conventional commit format to any branch
+2. **Push to `develop`** → GitHub Actions automatically:
+
    - Analyzes commit messages
-   - Determines version bump
+   - Determines version bump and creates beta release (e.g., 1.2.0-beta.1)
    - Updates package.json
    - Creates git tag
    - Generates changelog
-   - Builds and pushes Docker images with version tags
+   - Builds and pushes Docker images with beta version tags
+
+3. **Push to `master`** → GitHub Actions:
+   - Builds and pushes Docker images with stable tags
+   - No version changes (promotes existing version from develop)
 
 ## Setup for Contributors
 
