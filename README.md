@@ -1,162 +1,58 @@
 # NTFY Workbench
 
-A simple web app to manage [ntfy.sh](https://ntfy.sh) topics. It allows you to configure topics so that you can view by topic or by tag. Tagging allows you to group related topics together to make it easier to get a quick overview of what's happening for a particular project or area of interest. You can have as many tags as you want for a topic so you can group them pretty much however you would like.
+A simple web app to manage [ntfy.sh](https://ntfy.sh) topics. It allows you to configure topics so that you can view by topic or by tag.
 
-By Topic View
-![By Topic View](./docs/messages-by-topic.png)
+![By Topic View](./docs/messages-by-topic.png) ![By Tag View](./docs/messages-by-tag.png)
 
-By Tag View
-![By Tag View](./docs/messages-by-tag.png)
+## 📖 Documentation
 
-## Features
+**Complete documentation is available in the [📚 GitHub Wiki](https://github.com/mzrimsek/ntfy-workbench/wiki)**
 
-- View topics by tag
-- View topics by topic
-- Message counter for topics and tags
-- Mobile friendly view (probably not perfect but it works pretty decently)
-- Adjusts to dark or light mode based on your system settings
-- Configurable colors for topics with automatic fallback to generated colors
+- **[🚀 Setup Guide](https://github.com/mzrimsek/ntfy-workbench/wiki/Setup)** - Docker & local development
+- **[⚙️ Configuration](https://github.com/mzrimsek/ntfy-workbench/wiki/Configuration)** - Topics, tags, and colors
+- **[✨ Features](https://github.com/mzrimsek/ntfy-workbench/wiki/Features)** - What the app can do
+- **[🛠️ Development](https://github.com/mzrimsek/ntfy-workbench/wiki/Development)** - Contributing guide
 
-## Planned Features
+> 📝 **Note**: Wiki documentation is maintained as a git submodule in the [`wiki/`](./wiki/) directory.## Quick Start
 
-- Message acknowledgements (mark as read)
-- Ability to configure a webhook for a topic or tag with potential filtering by message contents
-- Ability to configure everything from the UI (currently requires a config file)
-- Maybe some other shit but I work on this in my free time so bear with me
-- Ability to configure dark or light mode in configuration
+```bash
+# Create config directory and file
+mkdir config
+# Add your config.yaml (see Configuration wiki page)
 
-## Running the app
-
-Using Docker is the easiest way to run the app, but you can also build it locally.
-
-### Configuration
-
-The app supports both YAML and JSON configuration formats. YAML is recommended for better readability and maintainability.
-
-#### Example config.yaml (Recommended)
-
-```yaml
-# ntfy-workbench configuration
-topics:
-  - name: test
-    description: test description
-    tags:
-      - tag1
-    color: "#3b82f6" # Optional: Custom hex color for this topic
-
-  - name: test2
-    description: test description
-    tags:
-      - tag1
-      - tag2
-    # No color specified - will use auto-generated color
-
-  - name: test3
-    # No description, tags, or color
-
-ntfy:
-  url: https://ntfy.sh
-  apiKey: your-api-key
+# Run with Docker
+docker run -p 3000:3000 \
+  -v $(pwd)/config:/app/config \
+  ghcr.io/mzrimsek/ntfy-workbench:latest
 ```
 
-##### Topic Color Configuration
+Access at: http://localhost:3000
 
-Each topic can optionally include a `color` property to customize its appearance:
+## Key Features
 
-- **color**: Optional hex color value (e.g., `#3b82f6`, `#ef4444`, `#10b981`)
-- If no color is specified, the app will auto-generate a color based on the topic name
-- Colors are used for message backgrounds in the topic view to help visually distinguish different topics
-- The app automatically calculates appropriate text color (black or white) for readability
+- 📱 **Mobile-friendly** responsive design
+- 🏷️ **Tag-based organization** - group related topics
+- 🎨 **Customizable colors** - custom or auto-generated
+- 🌓 **Dark/light mode** - follows system preferences
+- 📊 **Message counters** - for topics and tags
 
-#### Example config.json (Legacy support)
+## Contributing
 
-```json
-{
-  "topics": [
-    {
-      "name": "test",
-      "description": "test description",
-      "tags": ["tag1"],
-      "color": "#3b82f6"
-    },
-    {
-      "name": "test2",
-      "description": "test description",
-      "tags": ["tag1", "tag2"]
-    },
-    {
-      "name": "test3"
-    }
-  ],
-  "ntfy": {
-    "url": "https://ntfy.sh",
-    "apiKey": "your-api-key"
-  }
-}
-```
+Contributions are welcome! Please see the [Development Guide](https://github.com/mzrimsek/ntfy-workbench/wiki/Development) in the wiki for details on:
 
-**Note**: The app will try to load `config.yaml` first, then fall back to `config.json` for backward compatibility.
+- Development setup
+- Code conventions
+- Commit message format
+- Pull request process
 
-#### Docker Run
+### Updating Documentation
 
-1. Create a configuration file (`config.yaml` or `config.json`) and drop it in the desired directory. See the examples above.
+Documentation is maintained in the `wiki/` directory as a git submodule:
 
-2. Run `docker run -p 3000:3000 -v /path/to/config:/app/config ghcr.io/mzrimsek/ntfy-workbench:latest`
-
-3. Access the app at `http://localhost:3000`
-
-#### Docker Compose
-
-1. Create a configuration file (`config.yaml` or `config.json`) and drop it in the desired directory. See the examples above.
-
-2. Download the `docker-compose.yml` file from the repository.
-
-3. Create `.env` file in the root directory with the following content:
-
-```shell
-CONFIG_DIR=/path/to/folder/with/config
-```
-
-4. Run the app from the root directory
-
-```shell
-docker-compose up -d
-```
-
-5. Access the app at `http://localhost:3000`
-
-#### Build the Image
-
-1. Pick a directory for your config location
-
-2. Create a configuration file (`config.yaml` or `config.json`) and drop it in the desired directory. See the examples above.
-
-3. Build the image
-
-```shell
-docker build -t ntfy-workbench .
-```
-
-4. Run the image
-
-```shell
-docker run -p 3000:3000 -v /path/to/config:/app/config ntfy-workbench
-```
-
-5. Access the app at `http://localhost:3000`
-
-### Locally
-
-1. Install dependencies
-
-```shell
-npm install
-```
-
-2. Create a configuration file (`config.yaml` or `config.json`) and drop it in the config folder. See the examples above.
-
-3. Start the app
-
-```shell
-npm run dev
+```bash
+cd wiki
+# Edit documentation files
+git add .
+git commit -m "docs: update documentation"
+git push origin master
 ```

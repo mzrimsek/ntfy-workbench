@@ -29,11 +29,21 @@
   - Install dependencies: `npm install`
   - Start dev server: `npm run dev`
   - Place `config.yaml` (or `config.json`) in `config/`.
+- **Version Management:**
+  - Uses semantic-release with conventional commits for automated versioning
+  - Commit format: `type(scope): description` (e.g., `feat: add new feature`, `fix: resolve bug`)
+  - Versions increment automatically on pushes to `develop` branch (beta releases)
+  - `master` branch promotes stable releases without creating new versions
+- **Documentation:**
+  - Wiki is maintained as a git submodule in `wiki/` directory
+  - Edit wiki files directly in `wiki/` and push to wiki repository
+  - Full documentation available at project GitHub Wiki
 - **Docker:**
-  - See README for Docker and Docker Compose instructions. Mount your config directory to `/app/config`.
+  - See README and wiki for Docker and Docker Compose instructions. Mount your config directory to `/app/config`.
 - **Build:**
   - Standard Vite/Remix build process (see `vite.config.ts`, `tsconfig.json`).
-- **No explicit test setup** is documented; add tests in a `tests/` directory if needed.
+- **Testing:**
+  - No formal test suite currently implemented; add tests in `test/` directory if needed.
 
 ## Project Conventions
 
@@ -47,6 +57,10 @@
   - Keep UI, data logic, and service/API code in their respective folders.
 - **Color Logic:**
   - Topic/message color assignment is deterministic and based on topic name (see `color.utils.ts`).
+- **Commit Messages:**
+  - Use conventional commits format: `type(scope): description`
+  - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+  - Examples: `feat: add webhook support`, `fix: resolve mobile menu issue`, `docs: update setup guide`
 
 ## Integration Points
 
