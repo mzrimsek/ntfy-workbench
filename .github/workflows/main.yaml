@@ -1,32 +1,89 @@
-name: Publish Docker image
+name: CI/CD Pipeline
 on:
   push:
-    branches: [master]
+    branches: [master, develop]
   pull_request:
-    branches: [master]
+    branches: [master, develop]
+
 jobs:
-  multi_push_to_registry:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Run typecheck
+        run: npm run typecheck
+      - name: Run linting
+        run: npm run lint
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pull latest changes (after semantic-release)
+        if: github.ref == 'refs/heads/develop'
+        run: git pull origin develop
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get package version
+        id: package-version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+      - name: Determine Docker tags
+        id: docker-tags
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+            echo "tags=ghcr.io/${{ github.repository_owner }}/ntfy-workbench:latest,ghcr.io/${{ github.repository_owner }}/ntfy-workbench:v${{ steps.package-version.outputs.version }},ghcr.io/${{ github.repository_owner }}/ntfy-workbench:stable" >> $GITHUB_OUTPUT
+          else
+            echo "tags=ghcr.io/${{ github.repository_owner }}/ntfy-workbench:develop,ghcr.io/${{ github.repository_owner }}/ntfy-workbench:v${{ steps.package-version.outputs.version }},ghcr.io/${{ github.repository_owner }}/ntfy-workbench:${{ github.sha }}" >> $GITHUB_OUTPUT
+          fi
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/ntfy-workbench:latest
-            ghcr.io/${{ github.repository_owner }}/ntfy-workbench:${{ github.sha }}
+          tags: ${{ steps.docker-tags.outputs.tags }}
